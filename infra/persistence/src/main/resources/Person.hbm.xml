@@ -1,0 +1,51 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+  <class name = "ecc.hibernate.xml.model.Person" table = "person">
+      <id name = "id" column = "ID">
+         <generator class = "identity">
+          <param name="sequence">person_id_seq</param>
+       </generator>
+      </id>
+
+    <component name = "name" class="ecc.hibernate.xml.model.Name">
+      <property name = "firstName" column = "FIRST_NAME" type = "string"/>
+      <property name = "middleName" column = "MIDDLE_NAME" type = "string"/>
+      <property name = "lastName" column = "LAST_NAME" type = "string"/>
+      <property name = "title" column = "TITLE" type = "string"/>
+      <property name = "suffix" column = "SUFFIX" type = "string"/>
+    </component>    
+    <component name = "address" class="ecc.hibernate.xml.model.Address">
+      <property name = "street" column = "STREET" type = "string"/>
+      <property name = "barangay" column = "BARANGAY" type = "string"/>
+      <property name = "city" column = "CITY" type = "string"/>
+      <property name = "zipCode" column = "ZIP" type = "int"/>
+    </component>
+    <property name = "birthdate" column = "BIRTHDATE" type ="date"/>
+    <property name = "gwa" column = "GWA" type = "float"/>
+    <property name = "dateHired" column = "DATE_HIRED" type ="date"/>
+    <property name = "currentlyEmployed" column = "CURRENTLY_EMPLOYED" type ="boolean"/>
+
+    <set name="contacts" table="CONTACT" 
+    inverse="true" cascade="save-update,delete" lazy="true" fetch="select">
+        <key>
+            <column name="CONTACT_ID" not-null="true" />
+        </key>
+        <one-to-many class="ecc.hibernate.xml.model.Contact" />
+    </set>
+
+    <set name="roles" table="PERSON_ROLE" 
+      inverse="false" lazy="true" fetch="select" cascade="all" >
+        <key>
+            <column name="PERSON_ID" not-null="true" />
+        </key>
+        <many-to-many entity-name="ecc.hibernate.xml.model.Role">
+            <column name="ROLE_ID" not-null="true" />
+        </many-to-many>
+    </set>
+  </class>
+
+</hibernate-mapping>
