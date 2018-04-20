@@ -30,9 +30,9 @@
     <property name = "currentlyEmployed" column = "CURRENTLY_EMPLOYED" type ="boolean"/>
 
     <set name="contacts" table="CONTACT" 
-    inverse="true" cascade="save-update,delete" lazy="true" fetch="select">
+    inverse="false" cascade="all" lazy="true" fetch="select">
         <key>
-            <column name="CONTACT_ID" not-null="true" />
+            <column name="PERSON_ID" not-null="true" />
         </key>
         <one-to-many class="ecc.hibernate.xml.model.Contact" />
     </set>
