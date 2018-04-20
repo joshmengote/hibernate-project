@@ -12,8 +12,5 @@
       </id>
       <property name = "type" column = "TYPE" type = "string"/>
       <property name = "information" column = "INFORMATION" type = "string"/>
-      <many-to-one name="person" class="ecc.hibernate.xml.model.Person" fetch="select">
-        <column name="PERSON_ID" not-null="true" />
-      </many-to-one>
     </class>
 </hibernate-mapping>

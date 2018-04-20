@@ -1,31 +1,29 @@
 package ecc.hibernate.xml.model;
 
 public class Contact {
-	private long id;
-	private String type;
-	private String information;
-	
-	private Person person;
+    private long id;
+    private String type;
+    private String information;
+    
+    public Contact() {}
+    public Contact(String type, String information) {
+        this.type = type;
+        this.information = information;
+    }
 
-	public Contact() {}
-	public Contact(String type, String information) {
-		this.type = type;
-		this.information = information;
-	}
+    public long getId() {
+        return id;
+    }
+    private void setId(long id) {
+        this.id = id;
+    }
 
-	public long getId() {
-		return id;
-	}
-	private void setId(long id) {
-		this.id = id;
-	}
-
-	public String getInformation() {
-		return information;
-	}
-	public void setInformation(String information) {
-		this.information = information;
-	}
+    public String getInformation() {
+        return information;
+    }
+    public void setInformation(String information) {
+        this.information = information;
+    }
 
     public String getType() {
         return type;
@@ -33,13 +31,6 @@ public class Contact {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-	public Person getPerson() {
-		return person;
-	}
-    public void setPerson(Person person) {
-        this.person = person;
     }
 
 }
