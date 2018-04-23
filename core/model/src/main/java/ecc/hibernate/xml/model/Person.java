@@ -3,6 +3,7 @@ package ecc.hibernate.xml.model;
 import java.util.Date;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Comparator;
 
 public class Person {
 	private long id;
@@ -88,4 +89,16 @@ public class Person {
     public void setRoles(Set<Role> roles) {
     	this.roles = roles;
     }
+
+    public static Comparator<Person> gwaAscending = new Comparator<Person>() {
+        public int compare(Person o1, Person o2) {
+            return Float.compare(o2.getGwa(), o1.getGwa());
+        }
+    };
+
+    public static Comparator<Person> gwaDescending = new Comparator<Person>() {
+    	public int compare(Person o1, Person o2) {
+    		return Float.compare(o1.getGwa(), o2.getGwa());
+    	}
+    };
 }
