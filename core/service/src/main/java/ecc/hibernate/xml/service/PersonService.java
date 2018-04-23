@@ -93,12 +93,12 @@ public class PersonService{
         gwa = person.getGwa();
 
         personInfo = "   Person ID #: " + personId 
-            + "\n   [1] Name: " + nameString 
-            + "\n   [2] Address: " + addressString  
-            + "\n   [3] Birthdate: " + birthdateString 
-            + "\n   [4] GWA: " + gwa 
-            + "\n   [5] Date Hired: " + dateHiredString  
-            + "\n   [6] Employment Status:  Currently Employed = " + currentlyEmployed;
+            + "\n   Name: " + nameString 
+            + "\n   Address: " + addressString  
+            + "\n   Birthdate: " + birthdateString 
+            + "\n   GWA: " + gwa 
+            + "\n   Date Hired: " + dateHiredString  
+            + "\n   Employment Status:  Currently Employed = " + currentlyEmployed;
 
         return personInfo;
         }
