@@ -16,10 +16,5 @@
             <groupId>ecc.hibernate.xml</groupId>
             <artifactId>model</artifactId>
         </dependency>
-        <dependency>
-            <groupId>ecc.hibernate.xml</groupId>
-            <artifactId>dao</artifactId>
-            <version>${global.version}</version>
-        </dependency>
 	</dependencies>
 </project>
