@@ -79,5 +79,25 @@ public class RoleDao {
         }
     }
 
+    public static boolean checkIfExist(String roleName) {
+        List list = null;
+        boolean exist = false;
+        try {
+            startOperation();
+            String query = "FROM Role WHERE role = :ROLENAME";
+            Query queryObject = session.createQuery(query);
+            queryObject.setParameter("ROLENAME", roleName);
+            list = queryObject.list();
+            if (list.size() == 0) {
+                exist = true;
+            }
+            transaction.commit();
+        } catch (HibernateException e) {
+            transaction.rollback();
+        } finally {
+            session.close();
+        }
+        return exist;
+    }
     
 }
