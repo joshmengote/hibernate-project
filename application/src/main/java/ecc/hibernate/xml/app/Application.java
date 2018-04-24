@@ -256,7 +256,7 @@ public class Application {
                 System.out.println("   Added to Person - Role: " + role.getRoleName());
                 valid = true;
             } catch (NullPointerException e) {
-                System.out.println("  !!! There is no Role Entry with such ID !!!");
+                System.out.println("   There is no Role Entry with such ID");
             }
         }
         return roleId;
@@ -360,7 +360,7 @@ public class Application {
                 person = PersonDao.find(personId);
                 valid = true;
             } catch (NullPointerException e) {
-                System.out.println("  !!! There is no Person Entry with such ID !!!");
+                System.out.println("   There is no Person Entry with such ID ");
             }
         }
         return person;
@@ -477,11 +477,20 @@ public class Application {
         Role role = null;
         List roles;
         String roleName;
+        boolean roleExists = false;
+        valid = false;
         System.out.println(" >> ADD NEW ROLE <<");
         roles = printRoleList();
-        roleName = UserInputUtil.string("  Enter New Role: ");
-
-        role = new Role(roleName);
+        while(!valid) {
+            roleName = UserInputUtil.string("  Enter New Role: ");
+            role = new Role(roleName);
+            roleExists = RoleDao.checkIfExist(role.getRoleName());
+            if (roleExists){
+                valid = true;
+            } else {
+                System.out.println("   Role already exist");
+            }
+        }
         RoleDao.saveOrUpdate(role);
         roleManagementMenu();
     }
@@ -499,7 +508,7 @@ public class Application {
                 System.out.println("   Role: " + role.getRoleName());
                 valid = true;
             } catch (NullPointerException e) {
-                System.out.println("  !!! There is no Role Entry with such ID !!!");
+                System.out.println("   There is no Role Entry with such ID");
             }
         }
         String updatedRoleName = UserInputUtil.string("   Updated Role Entry: ");
@@ -521,12 +530,12 @@ public class Application {
                 if (role.getPerson().size() == 0) {
                     RoleDao.delete(role);
                 } else {
-                    System.out.println("\t!!!!Role is in used!!!!");
+                    System.out.println("\t!Role is in used!");
                     System.out.println("\tDelete failed.");
                 }
                 valid = true;
             } catch (NullPointerException e) {
-                System.out.println("  !!! There is no Role Entry with such ID !!!");
+                System.out.println("   There is no Role Entry with such ID");
             }
         }
         roleManagementMenu();
