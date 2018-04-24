@@ -12,7 +12,7 @@
       </id>
       <property name = "roleName" column = "ROLE" type = "string"/>
 
-      <set name="person" table="PERSON_ROLE" inverse="true" lazy="true" fetch="select">
+      <set name="person" table="PERSON_ROLE" inverse="true" lazy="true" >
           <key>
               <column name="ROLE_ID" not-null="true" />
           </key>
