@@ -30,7 +30,7 @@
     <property name = "currentlyEmployed" column = "CURRENTLY_EMPLOYED" type ="boolean"/>
 
     <set name="contacts" table="CONTACT" 
-    inverse="false" cascade="all,delete-orphan" lazy="true" fetch="select">
+    inverse="false" cascade="all,delete-orphan" lazy="true">
         <key>
             <column name="PERSON_ID" not-null="true" />
         </key>
@@ -38,7 +38,7 @@
     </set>
 
     <set name="roles" table="PERSON_ROLE" 
-      inverse="false" lazy="true" fetch="select" cascade="all" >
+      inverse="false" lazy="true" cascade="save-update" >
         <key>
             <column name="PERSON_ID" not-null="true" />
         </key>
