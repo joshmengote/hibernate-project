@@ -14,4 +14,16 @@
 		    <artifactId>postgresql</artifactId>
 		</dependency>
 	</dependencies>
+	<build>
+		<resources>
+			<resource>
+	        	<filtering>true</filtering>
+	        	<directory>${basedir}/src/main/resources</directory>
+        	</resource>
+        </resources>
+	</build>
+
+	<properties>
+		<database.name>persondb</database.name>
+	</properties>
 </project>
