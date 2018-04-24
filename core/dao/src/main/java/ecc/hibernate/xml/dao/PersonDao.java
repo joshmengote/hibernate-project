@@ -68,20 +68,10 @@ public class PersonDao {
         return objects;
     }   
 
-
     public static void delete(Person person) {
         try {
             startOperation();
-            long id = person.getId();
-            String query = "DELETE FROM Person WHERE id = :ID";
-            Query queryObject = session.createQuery(query);
-            queryObject.setParameter("ID", id);
-            int result = queryObject.executeUpdate();
-
-            query = "DELETE FROM Contact WHERE person_id = :ID";
-            queryObject = session.createQuery(query);
-            queryObject.setParameter("ID", (int) id);
-            result = queryObject.executeUpdate();
+            session.delete(person);
             transaction.commit();
         } catch (HibernateException e) {
             transaction.rollback();

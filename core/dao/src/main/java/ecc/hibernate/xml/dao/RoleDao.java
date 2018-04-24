@@ -65,12 +65,7 @@ public class RoleDao {
     public static void delete(Role role) {
         try {
             startOperation();
-            long id = role.getId();
-            String query = "DELETE FROM Role "  + 
-                         "WHERE id = :role_id";
-            Query queryObject = session.createQuery(query);
-            queryObject.setParameter("role_id", id);
-            queryObject.executeUpdate();
+            session.delete(role);
             transaction.commit();
         } catch (HibernateException e) {
             transaction.rollback();
