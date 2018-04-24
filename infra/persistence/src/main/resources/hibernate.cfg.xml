@@ -3,21 +3,16 @@
 "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 	<session-factory>
-   
-      <property name = "hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-
-	   <property name = "hibernate.connection.driver_class">org.postgresql.Driver</property>
-	   <property name = "hibernate.connection.url">jdbc:postgresql://localhost:5432/persondb</property>
-	   <property name = "hibernate.connection.username">postgres</property>
-	   <property name = "hibernate.connection.password">ex1stgl0bal</property>
-      
-		<!-- Echo all executed SQL to stdout-->
+      	<property name = "hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+   		<property name = "hibernate.connection.driver_class">org.postgresql.Driver</property>
+	   	<property name = "hibernate.connection.url">jdbc:postgresql://localhost:5432/persondb</property>
+	   	<property name = "hibernate.connection.username">postgres</property>
+	   	<property name = "hibernate.connection.password">ex1stgl0bal</property>
+	   	<property name = "hibernate.connection.pool_size">1</property>
 		<property name="show_sql">false</property>
-		<!-- List of XML mapping files -->
 
 		<mapping resource = "Person.hbm.xml"/>
 		<mapping resource = "Contact.hbm.xml"/>
 		<mapping resource = "Role.hbm.xml"/>
-      
 	</session-factory>
 </hibernate-configuration>
