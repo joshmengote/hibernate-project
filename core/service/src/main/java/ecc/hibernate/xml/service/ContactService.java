@@ -47,7 +47,7 @@ public class ContactService {
     public static String convertListToString(List<Contact> contacts) {
         String contactString = "";
         for(Contact contact : contacts) {
-            contactString += "   " + contact.getId() + "   " + contact.getType() + "   " + contact.getInformation() + "\n";
+            contactString += "    " + contact.getId() + "   " + contact.getType() + "   " + contact.getInformation() + "\n";
         }
         return contactString;
     }

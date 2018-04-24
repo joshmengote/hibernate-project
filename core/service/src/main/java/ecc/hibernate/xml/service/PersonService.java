@@ -37,15 +37,19 @@ public class PersonService{
         Address address = person.getAddress();
         Set<Role> roles = person.getRoles();
         Set<Contact> contacts = person.getContacts();
-        personString = "   " + person.getId() + " | " 
-                        + String.format(NameService.nameToString(name), 50) + " | " 
-                        + String.format(AddressService.addressToString(address), 50) + " | " 
-                        + person.getBirthdate() + " | " 
-                        + person.getGwa() + " | " 
-                        + person.getDateHired() + " | " 
-                        + person.getCurrentlyEmployed() + " | "
-                        + RoleService.roleSetToString(roles) + " | "
-                        + ContactService.contactSetToString(contacts) + " | "; 
+
+
+        String idString = String.format("| %-3s|",person.getId());
+        String nameString = String.format(" %-50s|",NameService.nameToString(name));
+        String addressString = String.format(" %-50s|",AddressService.addressToString(address));
+        String bdayString = String.format(" %-10s |", person.getBirthdate());
+        String dateHiredString = String.format(" %-10s |", person.getDateHired());
+        String gwaString = String.format(" %-4s |", person.getGwa());
+        String currentlyEmployedString = String.format("%8s%-12s|", "", person.getCurrentlyEmployed());
+        String roleString = String.format(" %-30s|", RoleService.roleSetToString(roles));
+        String contactString = String.format(" %-49s|", ContactService.contactSetToString(contacts));
+
+        personString = idString + nameString + addressString + bdayString + gwaString + dateHiredString + currentlyEmployedString + roleString + contactString;
         return personString;
     }
 
