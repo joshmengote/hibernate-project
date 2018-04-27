@@ -1,9 +1,10 @@
 package ecc.hibernate.xml.dao;
 
 import ecc.hibernate.xml.model.Role;
-import ecc.hibernate.xml.util.HibernateUtil;
+import ecc.hibernate.xml.util.HibernateUtils;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -17,7 +18,7 @@ public class RoleDao {
     private static Transaction transaction;
 
     private static void startOperation() throws HibernateException {
-        session = HibernateUtil.getSessionFactory().openSession();
+        session = HibernateUtils.getSessionFactory().openSession();
         transaction = session.beginTransaction();
     }
 
@@ -33,12 +34,13 @@ public class RoleDao {
         }
     }
 
-    public static Role find(long id) {
-        Role role = null;
+    public static Role find(Long id) {
+        Role role = new Role();
         try {
             startOperation();
             role = (Role) session.get(Role.class, id);
             Hibernate.initialize(role.getPerson());
+            transaction.commit();
         } catch (HibernateException e) {
             transaction.rollback();
         } finally {
@@ -48,11 +50,12 @@ public class RoleDao {
     }
 
     public static List findAll(){
-        List<Role> objects = null;
+        List<Role> objects = new ArrayList();
         try {
             startOperation();
             Query query = session.createQuery("FROM Role");
             objects = query.list();
+            transaction.commit();
         } catch (HibernateException e) {
             transaction.rollback();
         } finally {
@@ -60,7 +63,6 @@ public class RoleDao {
         }
         return objects;
     }   
-
 
     public static void delete(Role role) {
         try {
@@ -74,15 +76,14 @@ public class RoleDao {
         }
     }
 
-    public static boolean checkIfExist(String roleName) {
-        List list = null;
+    public static boolean roleExist(String roleName) {
         boolean exist = false;
         try {
             startOperation();
             String query = "FROM Role WHERE role = :ROLENAME";
             Query queryObject = session.createQuery(query);
             queryObject.setParameter("ROLENAME", roleName);
-            list = queryObject.list();
+            List list = queryObject.list();
             if (list.size() == 0) {
                 exist = true;
             }

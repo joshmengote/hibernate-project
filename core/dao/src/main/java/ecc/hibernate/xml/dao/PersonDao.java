@@ -3,7 +3,7 @@ package ecc.hibernate.xml.dao;
 import ecc.hibernate.xml.model.Person;
 import ecc.hibernate.xml.model.Contact;
 import ecc.hibernate.xml.model.Role;
-import ecc.hibernate.xml.util.HibernateUtil;
+import ecc.hibernate.xml.util.HibernateUtils;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class PersonDao {
     private static Transaction transaction;
 
     private static void startOperation() throws HibernateException {
-        session = HibernateUtil.getSessionFactory().openSession();
+        session = HibernateUtils.getSessionFactory().openSession();
         transaction = session.beginTransaction();
     }
 

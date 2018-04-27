@@ -7,25 +7,15 @@ public class Address {
 	private String street;
 	private String barangay;
 	private String city;
-	private int zipCode;
+	private Integer zipCode;
 	
-	private Set<Person> person = new HashSet<Person>();
-
 	public Address() {}
-	public Address(String street, String barangay, String city, int zipCode) {
+	public Address(String street, String barangay, String city, Integer zipCode) {
 		this.street = street;
 		this.barangay = barangay;
 		this.city = city;
 		this.zipCode = zipCode;
 	}
-
-    public Set<Person> getPerson() {
-        return person;
-    }
-
-    public void setPerson(Set<Person> person) {
-    	this.person = person;
-    }
 
 	public String getStreet(){
 		return street;
@@ -49,10 +39,10 @@ public class Address {
 		this.city = city;
 	}
 
-	public int getZipCode() {
+	public Integer getZipCode() {
 		return zipCode;
 	}
-	public void setZipCode(int zipCode) {
+	public void setZipCode(Integer zipCode) {
 		this.zipCode = zipCode;
 	}
 }

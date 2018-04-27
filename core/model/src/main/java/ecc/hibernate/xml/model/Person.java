@@ -6,11 +6,11 @@ import java.util.HashSet;
 import java.util.Comparator;
 
 public class Person {
-	private long id;
-	private float gwa;
+	private Long id;
+	private Float gwa;
 	private Date birthdate;
 	private Date dateHired;
-	private boolean currentlyEmployed;
+	private Boolean currentlyEmployed;
 	
 	private Name name;
 	private Address address;
@@ -18,7 +18,7 @@ public class Person {
 	private Set<Contact> contacts = new HashSet<Contact>();
 
 	public Person() {}
-	public Person(Name name, Address address, float gwa, boolean currentlyEmployed,Date birthdate, Date dateHired) {
+	public Person(Name name, Address address, Float gwa, Boolean currentlyEmployed,Date birthdate, Date dateHired) {
 		this.name = name;
 		this.address = address;
 		this.gwa = gwa;
@@ -27,10 +27,10 @@ public class Person {
 		this.dateHired = dateHired;
 	}
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	private void setId(long id) {
+	private void setId(Long id) {
 		this.id = id;
 	}
 
@@ -48,17 +48,17 @@ public class Person {
 		this.dateHired = dateHired;
 	}
 
-	public float getGwa() {
+	public Float getGwa() {
 		return gwa;
 	}
-	public void setGwa(float gwa) {
+	public void setGwa(Float gwa) {
 		this.gwa = gwa;
 	}
 
-	public boolean getCurrentlyEmployed() {
+	public Boolean getCurrentlyEmployed() {
 		return currentlyEmployed;
 	}
-	public void setCurrentlyEmployed(boolean currentlyEmployed) {
+	public void setCurrentlyEmployed(Boolean currentlyEmployed) {
 		this.currentlyEmployed = currentlyEmployed;
 	}
 

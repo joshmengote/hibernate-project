@@ -1,8 +1,7 @@
 package ecc.hibernate.xml.service;
 
-import ecc.hibernate.xml.model.Person;
-import ecc.hibernate.xml.model.Name;
 import ecc.hibernate.xml.model.Contact;
+import ecc.hibernate.xml.dao.ContactDao;
 
 import java.util.List;
 import java.util.Set;
@@ -10,6 +9,22 @@ import java.util.HashSet;
 import org.apache.commons.lang3.StringUtils;
 
 public class ContactService {
+
+    public static void saveOrUpdate(Contact contact) {
+        ContactDao.saveOrUpdate(contact);
+    }
+
+    public static void delete(Contact contact) {
+        ContactDao.delete(contact);
+    }
+
+    public static Contact find(Long id) {
+        return ContactDao.find(id);
+    }
+
+    public static boolean contactExist(Contact contact) {
+        return ContactDao.contactExist(contact.getInformation());
+    }
 
     public static Contact stringToContact(String contactString) {
         String[] contactArray;
@@ -33,7 +48,7 @@ public class ContactService {
         return contacts;
     }
 
-    public static String contactSetToString(Set<Contact> contacts) {
+    public static String convertSetToString(Set<Contact> contacts) {
         String contactsString = "";
         for(Contact contact : contacts) {
             contactsString += contact.getInformation();

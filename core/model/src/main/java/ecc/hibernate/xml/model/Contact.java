@@ -1,7 +1,7 @@
 package ecc.hibernate.xml.model;
 
 public class Contact {
-    private long id;
+    private Long id;
     private String type;
     private String information;
     
@@ -11,10 +11,10 @@ public class Contact {
         this.information = information;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
-    private void setId(long id) {
+    private void setId(Long id) {
         this.id = id;
     }
 

@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 public class Role {
-    private long id;
+    private Long id;
     private String roleName;
 
     private Set<Person> person = new HashSet<Person>();
@@ -14,10 +14,10 @@ public class Role {
         this.roleName = roleName;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
-    private void setId(long id) {
+    private void setId(Long id) {
         this.id = id;
     }
 
