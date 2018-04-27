@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 public class UserInputUtils {
     private static Scanner scan = new Scanner(System.in);
     
-    public static int numberWithLimit (String header, int numberOfChoices) {
+    public int numberWithLimit (String header, int numberOfChoices) {
         int optionSelected = 0;
         boolean inputValid = false;
         while(!inputValid) {
@@ -35,7 +35,7 @@ public class UserInputUtils {
         return optionSelected;
     }
     
-    public static int number (String header) {
+    public int number (String header) {
         int input = 0;
         boolean inputValid = false;
         while(!inputValid) {
@@ -55,7 +55,7 @@ public class UserInputUtils {
         return input;
     }
 
-    public static float decimal (String header) {
+    public float decimal (String header) {
         float input = 0;
         boolean inputValid = false;
         while(!inputValid) {
@@ -75,7 +75,7 @@ public class UserInputUtils {
         return input;
     }
     
-    public static String string (String header) {
+    public String string (String header) {
         String inputString = "";
         boolean validInput = false;
         while(!validInput) {
@@ -91,7 +91,7 @@ public class UserInputUtils {
         return inputString;
     }
 
-    public static String stringWithNull (String header) {
+    public String stringWithNull (String header) {
         String inputString = "";
         boolean validInput = false;
         while(!validInput) {
@@ -112,7 +112,7 @@ public class UserInputUtils {
         return inputString;
     }
 
-    public static Date date(String header) {
+    public Date date(String header) {
         Date date = new Date();
 
         System.out.print(header);
@@ -131,7 +131,7 @@ public class UserInputUtils {
         return date;
     }
     
-    public static String mobileNumber (String header) {
+    public String mobileNumber (String header) {
         String inputString = "";
         boolean validInput = false;
         while(!validInput) {
@@ -146,7 +146,7 @@ public class UserInputUtils {
         return inputString;
     }
 
-    public static String landline (String header) {
+    public String landline (String header) {
         String inputString = "";
         boolean validInput = false;
         while(!validInput) {

@@ -16,13 +16,13 @@ import org.hibernate.HibernateException;
 public class RoleDao {
     private static Session session;
     private static Transaction transaction;
-
-    private static void startOperation() throws HibernateException {
-        session = HibernateUtils.getSessionFactory().openSession();
+    private static HibernateUtils hibernateUtil = new HibernateUtils();
+    private void startOperation() throws HibernateException {
+        session = hibernateUtil.getSessionFactory().openSession();
         transaction = session.beginTransaction();
     }
 
-    public static void saveOrUpdate(Role role) {
+    public void saveOrUpdate(Role role) {
         try {
             startOperation();
             session.saveOrUpdate(role);
@@ -34,7 +34,7 @@ public class RoleDao {
         }
     }
 
-    public static Role find(Long id) {
+    public Role find(Long id) {
         Role role = new Role();
         try {
             startOperation();
@@ -49,7 +49,7 @@ public class RoleDao {
         return role;
     }
 
-    public static List findAll(){
+    public List findAll(){
         List<Role> objects = new ArrayList();
         try {
             startOperation();
@@ -64,7 +64,7 @@ public class RoleDao {
         return objects;
     }   
 
-    public static void delete(Role role) {
+    public void delete(Role role) {
         try {
             startOperation();
             session.delete(role);
@@ -76,7 +76,7 @@ public class RoleDao {
         }
     }
 
-    public static boolean roleExist(String roleName) {
+    public boolean roleExist(String roleName) {
         boolean exist = false;
         try {
             startOperation();

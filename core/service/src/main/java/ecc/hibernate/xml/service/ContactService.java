@@ -9,24 +9,29 @@ import java.util.HashSet;
 import org.apache.commons.lang3.StringUtils;
 
 public class ContactService {
+    private ContactDao contactDao;
 
-    public static void saveOrUpdate(Contact contact) {
-        ContactDao.saveOrUpdate(contact);
+    public ContactService() {
+        contactDao = new ContactDao();
     }
 
-    public static void delete(Contact contact) {
-        ContactDao.delete(contact);
+    public void saveOrUpdate(Contact contact) {
+        contactDao.saveOrUpdate(contact);
     }
 
-    public static Contact find(Long id) {
-        return ContactDao.find(id);
+    public void delete(Contact contact) {
+        contactDao.delete(contact);
     }
 
-    public static boolean contactExist(Contact contact) {
-        return ContactDao.contactExist(contact.getInformation());
+    public Contact find(Long id) {
+        return contactDao.find(id);
     }
 
-    public static Contact stringToContact(String contactString) {
+    public boolean contactExist(Contact contact) {
+        return contactDao.contactExist(contact.getInformation());
+    }
+
+    public Contact stringToContact(String contactString) {
         String[] contactArray;
         String type;
         String information;
@@ -38,7 +43,7 @@ public class ContactService {
         return contact;
     }
 
-    public static Set<Contact> stringToContactSet(String contactString) {
+    public Set<Contact> stringToContactSet(String contactString) {
         String[] contactArray;
         Set<Contact> contacts = new HashSet<Contact>();
         contactArray = StringUtils.split(contactString, '\n');
@@ -48,7 +53,7 @@ public class ContactService {
         return contacts;
     }
 
-    public static String convertSetToString(Set<Contact> contacts) {
+    public String convertSetToString(Set<Contact> contacts) {
         String contactsString = "";
         for(Contact contact : contacts) {
             contactsString += contact.getInformation();
@@ -59,7 +64,7 @@ public class ContactService {
         return contactsString;
     }
 
-    public static String convertListToString(List<Contact> contacts) {
+    public String convertListToString(List<Contact> contacts) {
         String contactString = "";
         for(Contact contact : contacts) {
             contactString += "    " + contact.getId() + "   " + contact.getType() + "   " + contact.getInformation() + "\n";

@@ -20,25 +20,41 @@ import ecc.hibernate.xml.dao.RoleDao;
 
 public class PersonService{
 
-    public static void saveOrUpdate(Person person) {
-        PersonDao.saveOrUpdate(person);
+    private PersonDao personDao;
+    private RoleDao roleDao;
+    private NameService nameService;
+    private AddressService addressService;
+    private RoleService roleService;
+    private ContactService contactService;
+
+    public PersonService() {
+        personDao = new PersonDao();
+        roleDao = new RoleDao();
+        nameService = new NameService();
+        addressService = new AddressService();
+        roleService = new RoleService();
+        contactService = new ContactService();
     }
 
-    public static List sort(int parameter, int order) {
-        return PersonDao.sort(parameter,order);
+    public void saveOrUpdate(Person person) {
+        personDao.saveOrUpdate(person);
     }
 
-    public static List findAll() {
-        return PersonDao.findAll();
-    }
-    public static Person find(Long id) {
-        return PersonDao.find(id);
-    }
-    public static void delete(Person person) {
-        PersonDao.delete(person);
+    public List sort(int parameter, int order) {
+        return personDao.sort(parameter,order);
     }
 
-    private static String personObjectToString(Person person) {
+    public List findAll() {
+        return personDao.findAll();
+    }
+    public Person find(Long id) {
+        return personDao.find(id);
+    }
+    public void delete(Person person) {
+        personDao.delete(person);
+    }
+
+    private String personObjectToString(Person person) {
         Name name = person.getName();
         Address address = person.getAddress();
         Set<Role> roles = person.getRoles();
@@ -51,20 +67,20 @@ public class PersonService{
         }
 
         String idString = String.format("| %-3s|",person.getId());
-        String nameString = String.format(" %-50s|",NameService.nameToString(name));
-        String addressString = String.format(" %-50s|",AddressService.addressToString(address));
+        String nameString = String.format(" %-50s|",nameService.nameToString(name));
+        String addressString = String.format(" %-50s|",addressService.addressToString(address));
         String bdayString = String.format(" %-10s |", person.getBirthdate());
         String dateHiredString = String.format(" %-10s |", person.getDateHired());
         String gwaString = String.format(" %-4s |", person.getGwa());
         String currentlyEmployedString = String.format("%8s%-12s|", "", currentlyEmployed);
-        String roleString = String.format(" %-30s|", RoleService.convertSetToString(roles));
-        String contactString = String.format(" %-49s|", ContactService.convertSetToString(contacts));
+        String roleString = String.format(" %-30s|", roleService.convertSetToString(roles));
+        String contactString = String.format(" %-49s|", contactService.convertSetToString(contacts));
 
         String personString = idString + nameString + addressString + bdayString + gwaString + dateHiredString + currentlyEmployedString + roleString + contactString;
         return personString;
     }
 
-    public static String convertListToString(List<Person> people) {
+    public String convertListToString(List<Person> people) {
         String peopleString = "";
         for(Person person : people) {
             peopleString += personObjectToString(person) + "\n";
@@ -72,12 +88,12 @@ public class PersonService{
         return peopleString;
     }
 
-    public static String getPersonInfoAsString(Person person) {
+    public String getPersonInfoAsString(Person person) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
         String personInfo = "   Person ID #: " + person.getId() 
-            + "\n   Name: " + NameService.nameToString(person.getName()) 
-            + "\n   Address: " + AddressService.addressToString(person.getAddress())  
+            + "\n   Name: " + nameService.nameToString(person.getName()) 
+            + "\n   Address: " + addressService.addressToString(person.getAddress())  
             + "\n   Birthdate: " + dateFormat.format(person.getBirthdate()) 
             + "\n   GWA: " + person.getGwa() 
             + "\n   Date Hired: " + dateFormat.format(person.getBirthdate())  
@@ -85,8 +101,8 @@ public class PersonService{
         return personInfo;
     }
 
-    public static List getAvailableRolesFor(Person person) {
-        List<Role> roles = RoleDao.findAll();
+    public List getAvailableRolesFor(Person person) {
+        List<Role> roles = roleDao.findAll();
         List<Role> personRolesList = new ArrayList(person.getRoles());
         List<Role> intersection = new ArrayList();
         for (Role role : roles) {
@@ -100,14 +116,14 @@ public class PersonService{
         return roles;
     }
 
-    public static boolean hasAvailableRolesFor(Person person) {
+    public boolean hasAvailableRolesFor(Person person) {
         if (getAvailableRolesFor(person).size() == 0){
             return false;
         }
         return true;
     }
 
-    public static boolean roleIsAvailable(Person person, Role role) {
+    public boolean roleIsAvailable(Person person, Role role) {
         List<Role> availableRoles = getAvailableRolesFor(person);
         boolean isAvailable = true;
         for (Role personRole : availableRoles) {
@@ -118,7 +134,7 @@ public class PersonService{
         return isAvailable;
     }
 
-    public static boolean isEmpty() {
-        return (PersonDao.findAll().size() == 0);
+    public boolean isEmpty() {
+        return (personDao.findAll().size() == 0);
     }
 }

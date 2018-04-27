@@ -8,32 +8,38 @@ import ecc.hibernate.xml.dao.RoleDao;
 
 public class RoleService{
 
-    public static void saveOrUpdate(Role role ) {
-        RoleDao.saveOrUpdate(role);
+    private RoleDao roleDao;
+
+    public RoleService() {
+        roleDao = new RoleDao();
     }
 
-    public static Role find(Long id) {
-        return RoleDao.find(id);
+    public void saveOrUpdate(Role role ) {
+        roleDao.saveOrUpdate(role);
     }
 
-    public static List findAll() {
-        return RoleDao.findAll();
+    public Role find(Long id) {
+        return roleDao.find(id);
     }
 
-    public static void delete(Role role) {
-        RoleDao.delete(role);
+    public List findAll() {
+        return roleDao.findAll();
     }
 
-    public static boolean isEmpty() {
-        return (RoleDao.findAll().size() == 0);
+    public void delete(Role role) {
+        roleDao.delete(role);
+    }
+
+    public boolean isEmpty() {
+        return (roleDao.findAll().size() == 0);
     }
 
 
-    public static boolean roleExist(Role role) {
-        return RoleDao.roleExist(role.getRoleName());
+    public boolean roleExist(Role role) {
+        return roleDao.roleExist(role.getRoleName());
     }
 
-    public static String convertListToString(List<Role> roles) {
+    public String convertListToString(List<Role> roles) {
         String rolesString = "";
         for(Role role : roles) {
             rolesString += "   " + role.getId() + "   " + role.getRoleName() + "\n";
@@ -41,7 +47,7 @@ public class RoleService{
         return rolesString;
     }
 
-    public static String convertSetToString(Set<Role> roles) {
+    public String convertSetToString(Set<Role> roles) {
         String rolesString = "";
         int count = 0;
         for(Role role : roles) {

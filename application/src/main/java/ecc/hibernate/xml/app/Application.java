@@ -9,9 +9,11 @@ import java.util.Date;
 import java.util.Collections;
 
 
-import ecc.hibernate.xml.util.*;
 import ecc.hibernate.xml.model.*;
-import ecc.hibernate.xml.service.*;
+import ecc.hibernate.xml.util.*;
+import ecc.hibernate.xml.service.RoleService;
+import ecc.hibernate.xml.service.PersonService;
+import ecc.hibernate.xml.service.ContactService;
 
 public class Application {
     private static final String dashes = new String(new char[247]).replace("\0", "-");
@@ -22,8 +24,14 @@ public class Application {
     private static boolean valid;
     private static int selectedOption;
 
+    private static PersonService personService = new PersonService();
+    private static RoleService roleService = new RoleService();
+    private static ContactService contactService = new ContactService();
+    private static UserInputUtils userInput = new UserInputUtils();
+    private static HibernateUtils hibernateUtil = new HibernateUtils();
+
     public static void main(String[] args) {
-        HibernateUtils.getSessionFactory();
+        hibernateUtil.getSessionFactory();
         System.out.println();
         System.out.println("Welcome to ECC Exercise 7: Hibernate ORM");
         System.out.print("Press Enter to continue...");
@@ -36,7 +44,7 @@ public class Application {
         System.out.println(" [1] PERSON MANAGEMENT"
                         + "\n [2] ROLE MANAGEMENT"
                         + "\n [3] EXIT");
-        selectedOption = UserInputUtils.numberWithLimit(" Select option",3);
+        selectedOption = userInput.numberWithLimit(" Select option",3);
         switch(selectedOption) {
             case 1:
                 personManagementMenu();
@@ -63,7 +71,7 @@ public class Application {
                         + "\n  [8] UPDATE CONTACT"
                         + "\n  [9] DELETE CONTACT"
                         + "\n  [10] RETURN");
-        selectedOption = UserInputUtils.numberWithLimit(" Select option",10);
+        selectedOption = userInput.numberWithLimit(" Select option",10);
         System.out.println();
         switch(selectedOption) {
             case 1: 
@@ -117,7 +125,7 @@ public class Application {
                         + "\n [3] DELETE ROLE"
                         + "\n [4] LIST ROLE"
                         + "\n [5] RETURN");
-        selectedOption = UserInputUtils.numberWithLimit(" Select option",5);
+        selectedOption = userInput.numberWithLimit(" Select option",5);
         System.out.println();
         switch(selectedOption) {
             case 1:
@@ -148,20 +156,20 @@ public class Application {
         Role role = new Role();
         valid = false;
         while(!valid) {
-            role.setRoleName(UserInputUtils.string("  Enter New Role: "));
-            boolean roleExists = RoleService.roleExist(role);
+            role.setRoleName(userInput.string("  Enter New Role: "));
+            boolean roleExists = roleService.roleExist(role);
             if (roleExists){
                 valid = true;
             } else {
                 System.out.println("\t Role already exist. Please try again. ");
             }
         }
-        RoleService.saveOrUpdate(role);
+        roleService.saveOrUpdate(role);
         roleManagementMenu();
     }
 
     private static void updateExistingRole() {
-        if (RoleService.isEmpty()) {
+        if (roleService.isEmpty()) {
             System.out.println(" No Role added yet.");
             roleManagementMenu();
         }
@@ -170,21 +178,21 @@ public class Application {
         String newRoleName = "";
         valid = false;
         while(!valid) {
-            newRoleName = UserInputUtils.string("   Updated Role Entry: ");
+            newRoleName = userInput.string("   Updated Role Entry: ");
             role.setRoleName(newRoleName);
-            boolean roleExists = RoleService.roleExist(role);
+            boolean roleExists = roleService.roleExist(role);
             if (roleExists){
                     valid = true;
             } else {
                 System.out.println("\t Role already exist. Please try again. ");
             }
         }
-        RoleService.saveOrUpdate(role);
+        roleService.saveOrUpdate(role);
         roleManagementMenu();
     }
 
     private static void deleteExistingRole() {
-        if (RoleService.isEmpty()) {
+        if (roleService.isEmpty()) {
             System.out.println(" No Role added yet.");
             roleManagementMenu();
         }
@@ -194,7 +202,7 @@ public class Application {
         while(!valid) {
             role = selectRole("   Delete Role");
             if (role.getPerson().size() == 0) {
-                RoleService.delete(role);
+                roleService.delete(role);
                 valid = true;
             } else {
                 System.out.println("\t Can't delete, role is in used!");
@@ -204,15 +212,15 @@ public class Application {
     }
 
     private static void listRoles() {
-        List roles = RoleService.findAll();
-        String rolesString = RoleService.convertListToString(roles);
+        List roles = roleService.findAll();
+        String rolesString = roleService.convertListToString(roles);
         System.out.println();
         System.out.println("  AVAILABLE ROLES\n");
         System.out.println("   ID  ROLE\n" + rolesString);
     }
 
     private static void addPerson() {
-        if (RoleService.isEmpty()) {
+        if (roleService.isEmpty()) {
             System.out.println(" Add roles before adding people.");
             personManagementMenu();
         }
@@ -223,7 +231,7 @@ public class Application {
         System.out.println("  ROLES");
         boolean isFinishedAdding = false;
         while(!isFinishedAdding) {
-            if(!PersonService.hasAvailableRolesFor(person)) {
+            if(!personService.hasAvailableRolesFor(person)) {
                 System.out.println("    No more available roles to add\n");
                 break;
             }
@@ -231,11 +239,11 @@ public class Application {
             Role role = selectPersonRole(person, "   Add Role");
             person.getRoles().add(role);
             System.out.println("   ADD ANOTHER ROLE? \n     [1]YES\n     [2]NO");
-            selectedOption = UserInputUtils.numberWithLimit("   Enter option", 2);
+            selectedOption = userInput.numberWithLimit("   Enter option", 2);
             switch(selectedOption) {
                 case 1:
                     System.out.println();
-                    System.out.println("   Added Person Roles: " + RoleService.convertSetToString(person.getRoles()));
+                    System.out.println("   Added Person Roles: " + roleService.convertSetToString(person.getRoles()));
                     break;
                 case 2:
                     isFinishedAdding = true;
@@ -245,7 +253,7 @@ public class Application {
 
         System.out.println("\n  CONTACT DETAILS");
         System.out.println("   ADD PERSONAL CONTACT INFORMATION? \n     [1]YES\n     [2]NO");
-        selectedOption = UserInputUtils.numberWithLimit("   Enter option", 2);
+        selectedOption = userInput.numberWithLimit("   Enter option", 2);
         isFinishedAdding = false;
         while(!isFinishedAdding) {
             System.out.println("   ADD CONTACT");
@@ -253,33 +261,33 @@ public class Application {
             newContact = updateContactInformation(newContact, selectContactType());
             person.getContacts().add(newContact);
             System.out.println("   ADD ANOTHER CONTACT? \n     [1]YES\n     [2]NO");
-            selectedOption = UserInputUtils.numberWithLimit("   Enter option", 2);
+            selectedOption = userInput.numberWithLimit("   Enter option", 2);
             if (selectedOption == 2) {
                 isFinishedAdding = true;
             } else {
                 System.out.println();
-                System.out.println("  Added Person Contacts: " + ContactService.convertSetToString(person.getContacts()));
+                System.out.println("  Added Person Contacts: " + contactService.convertSetToString(person.getContacts()));
                 System.out.println();
             }
         }
-        PersonService.saveOrUpdate(person); 
+        personService.saveOrUpdate(person); 
     }
 
     private static void updatePerson() {
-        if(PersonService.isEmpty()) {
+        if(personService.isEmpty()) {
             System.out.println(" No person added yet");
             return;
         }
         Person person = selectPersonFromList();
         System.out.println("  Current Data:");        
-        String personInfo = PersonService.getPersonInfoAsString(person);
+        String personInfo = personService.getPersonInfoAsString(person);
         System.out.println(personInfo);
         System.out.println();
 
         System.out.println("  UPDATE - Enter New Data:");
         person = updatePersonProperties(person);
 
-        PersonService.saveOrUpdate(person);
+        personService.saveOrUpdate(person);
     }
 
     private static void printPersonListBy() {
@@ -287,22 +295,22 @@ public class Application {
         System.out.println("  LIST BY:\n   [1] LAST NAME"
                                    + "\n   [2] DATE HIRED"
                                    + "\n   [3] GWA");
-        int parameter = UserInputUtils.numberWithLimit("  Select option",3);
+        int parameter = userInput.numberWithLimit("  Select option",3);
 
         System.out.println("  ORDER:\n   [1] ASCENDING"
                                  + "\n   [2] DESCENDING");
-        int order = UserInputUtils.numberWithLimit("  Select option",2);
+        int order = userInput.numberWithLimit("  Select option",2);
         if(parameter != 3) {
-            list = PersonService.sort(parameter, order);
+            list = personService.sort(parameter, order);
         } else {
-            list = PersonService.findAll();
+            list = personService.findAll();
             if (order == 1) {
                 Collections.sort(list, Person.gwaAscending);
             } else if (order == 2) {
                 Collections.sort(list, Person.gwaDescending);
             }
         }
-        String stringList = PersonService.convertListToString(list);
+        String stringList = personService.convertListToString(list);
         System.out.println();
         System.out.println(columnNames);
         System.out.println(dashes);
@@ -311,32 +319,32 @@ public class Application {
     }
     
     private static void deletePerson() {
-        if(PersonService.isEmpty()) {
+        if(personService.isEmpty()) {
             System.out.println(" No person added yet");
             return;
         }
         Person person = selectPersonFromList();
-        PersonService.delete(person);
+        personService.delete(person);
     }
 
     private static void addPersonRole() {
-        if(PersonService.isEmpty()) {
+        if(personService.isEmpty()) {
             System.out.println(" No person added yet");
             return;
         }
         Person person = selectPersonFromList();
-        if(!PersonService.hasAvailableRolesFor(person)) {
+        if(!personService.hasAvailableRolesFor(person)) {
             System.out.println("    No more available roles to add");
             return;
         }
         printAvailableRolesFor(person);
         Role role = selectPersonRole(person, "   Add person role");
         person.getRoles().add(role);
-        PersonService.saveOrUpdate(person);
+        personService.saveOrUpdate(person);
     }
 
     private static void deletePersonRole() {
-        if(PersonService.isEmpty()) {
+        if(personService.isEmpty()) {
             System.out.println(" No person added yet");
             return;
         }
@@ -348,11 +356,11 @@ public class Application {
         }
         System.out.println();
         System.out.println("  PERSON CURRENT ROLES");
-        System.out.println("   ID  ROLE\n" + RoleService.convertListToString(roles));
+        System.out.println("   ID  ROLE\n" + roleService.convertListToString(roles));
         int count = 0;
         boolean valid = false;
         while(!valid) {
-            Long roleId = (long) UserInputUtils.number("  Remove Role(Enter ID): ");
+            Long roleId = (long) userInput.number("  Remove Role(Enter ID): ");
             for (Role role : roles) {
                 if (role.getId() == roleId) {
                     person.getRoles().remove(role);
@@ -365,11 +373,11 @@ public class Application {
                 valid = true;
             }
         }
-        PersonService.saveOrUpdate(person);
+        personService.saveOrUpdate(person);
     }
     
     private static void addContact() {
-        if(PersonService.isEmpty()) {
+        if(personService.isEmpty()) {
             System.out.println(" No person added yet");
             return;
         }
@@ -379,11 +387,11 @@ public class Application {
         Contact contact = new Contact();
         contact = updateContactInformation(contact, selectContactType());
         person.getContacts().add(contact);
-        PersonService.saveOrUpdate(person);
+        personService.saveOrUpdate(person);
     }
 
     private static void updateContact() {
-        if(PersonService.isEmpty()) {
+        if(personService.isEmpty()) {
             System.out.println(" No person added yet");
             return;
         }
@@ -395,11 +403,11 @@ public class Application {
         printPersonContacts(person);
         Contact contact = selectContact(person, "   Update contact");
         contact = updateContactInformation(contact, contact.getType());
-        ContactService.saveOrUpdate(contact);
+        contactService.saveOrUpdate(contact);
     }
 
     private static void deleteContact() {
-        if(PersonService.isEmpty()) {
+        if(personService.isEmpty()) {
             System.out.println(" No person added yet");
             return;
         }
@@ -410,20 +418,20 @@ public class Application {
         }
         printPersonContacts(person);
         Contact contact = selectContact(person, "   Delete contact");
-        ContactService.delete(contact);
+        contactService.delete(contact);
     }
 
     private static void printPersonList() {
-        List people = PersonService.findAll();
-        String peopleString = PersonService.convertListToString(people);
+        List people = personService.findAll();
+        String peopleString = personService.convertListToString(people);
         System.out.println(columnNames);    
         System.out.println(dashes);    
         System.out.println(peopleString);    
     }
 
     private static void printAvailableRolesFor(Person person) {
-        List availableRoles = PersonService.getAvailableRolesFor(person);
-        String rolesString = RoleService.convertListToString(availableRoles);
+        List availableRoles = personService.getAvailableRolesFor(person);
+        String rolesString = roleService.convertListToString(availableRoles);
         System.out.println();
         System.out.println("  AVAILABLE ROLES");
         System.out.println("   ID   ROLE\n" + rolesString);
@@ -431,7 +439,7 @@ public class Application {
 
     private static void printPersonContacts(Person person) {
         List<Contact> contacts = new ArrayList(person.getContacts());
-        String contactString = ContactService.convertListToString(contacts);
+        String contactString = contactService.convertListToString(contacts);
         System.out.println("\n  PERSON ID #: " + person.getId());
         System.out.println("   CONTACTS:");
         System.out.println("    ID   TYPE   INFORMATION");
@@ -444,8 +452,8 @@ public class Application {
         printPersonList();
         while(!valid) {
             try {
-                Long personId = (long) UserInputUtils.number("  Select Person(Enter ID): ");
-                person = PersonService.find(personId);
+                Long personId = (long) userInput.number("  Select Person(Enter ID): ");
+                person = personService.find(personId);
                 valid = true;
             } catch (NullPointerException e) {
                 System.out.println("\t There is no Person Entry with such ID ");
@@ -459,8 +467,8 @@ public class Application {
         valid = false;
         while(!valid) {
             try {
-                role = RoleService.find((long) UserInputUtils.number(header + "(Enter ID): "));
-                if (PersonService.roleIsAvailable(person,role)) {
+                role = roleService.find((long) userInput.number(header + "(Enter ID): "));
+                if (personService.roleIsAvailable(person,role)) {
                     System.out.println("    Role not available to add. Please try again.");
                 } else {
                     valid = true;
@@ -477,7 +485,7 @@ public class Application {
         valid = false;
         while(!valid) {
             try {
-                role = RoleService.find((long) UserInputUtils.number(header + " (Enter ID): "));
+                role = roleService.find((long) userInput.number(header + " (Enter ID): "));
                 System.out.println("   Role: " + role.getRoleName());
                 valid = true;
             } catch (NullPointerException e) {
@@ -492,7 +500,7 @@ public class Application {
         valid = false;
         while(!valid) {
             try {
-                contact = ContactService.find((long) UserInputUtils.number(header + "(Enter ID): "));
+                contact = contactService.find((long) userInput.number(header + "(Enter ID): "));
                 int count = 0;
                 for (Contact personContacts : person.getContacts()) {
                     if (contact.getInformation().equals(personContacts.getInformation())) {
@@ -514,25 +522,25 @@ public class Application {
     private static Person updatePersonProperties(Person person) {
         System.out.println("  NAME");
         Name name = new Name();
-        name.setTitle(UserInputUtils.stringWithNull("   Title: "));
-        name.setFirstName(UserInputUtils.string("   First Name: "));
-        name.setMiddleName(UserInputUtils.string("   Middle Name: "));
-        name.setLastName(UserInputUtils.string("   Last Name: "));
-        name.setSuffix(UserInputUtils.stringWithNull("   Suffix: "));
+        name.setTitle(userInput.stringWithNull("   Title: "));
+        name.setFirstName(userInput.string("   First Name: "));
+        name.setMiddleName(userInput.string("   Middle Name: "));
+        name.setLastName(userInput.string("   Last Name: "));
+        name.setSuffix(userInput.stringWithNull("   Suffix: "));
         person.setName(name);
         System.out.println();
 
         System.out.println("  ADDRESS");
         Address address = new Address();
-        address.setStreet(UserInputUtils.string("   Street: "));
-        address.setBarangay(UserInputUtils.string("   Barangay: "));
-        address.setCity(UserInputUtils.string("   City: "));
-        address.setZipCode(UserInputUtils.number("   Zip Code: "));
+        address.setStreet(userInput.string("   Street: "));
+        address.setBarangay(userInput.string("   Barangay: "));
+        address.setCity(userInput.string("   City: "));
+        address.setZipCode(userInput.number("   Zip Code: "));
         person.setAddress(address);
         System.out.println();
 
         System.out.println("  BIRTHDATE (MM/DD/YYYY)");
-        Date birthdate = UserInputUtils.date("   Birthdate: ");
+        Date birthdate = userInput.date("   Birthdate: ");
         person.setBirthdate(birthdate);
         System.out.println();
 
@@ -540,7 +548,7 @@ public class Application {
         boolean isDateValid = false;
         Date dateHired = new Date();
         while(!isDateValid) {
-            dateHired = UserInputUtils.date("   Date Hired: ");
+            dateHired = userInput.date("   Date Hired: ");
             if (birthdate.compareTo(dateHired) > 0) {
                 System.out.println("    Date hired can't be before being born. Please try again");
             } else if(birthdate.compareTo(dateHired) <= 0){
@@ -555,7 +563,7 @@ public class Application {
         System.out.println("  GRADE WEIGHTED AVERAGE");
         Float gwa = 0f;
         while (gwa <= 0f || gwa > 5f) {
-            gwa = UserInputUtils.decimal("   GWA: ");
+            gwa = userInput.decimal("   GWA: ");
             if (gwa <= 0 || gwa > 5) {
                 System.out.println("    Invalid GWA (Range: 1~5, [1=Highest, 5=Lowest]). Please try again.");
             }
@@ -565,7 +573,7 @@ public class Application {
 
         System.out.println("  CURRENTLY EMPLOYED?");
         System.out.println("   [1] YES" + "\n   [2] NO");
-        int employedOption = UserInputUtils.numberWithLimit("   Select option",2);
+        int employedOption = userInput.numberWithLimit("   Select option",2);
         if (employedOption == 1) {
             person.setCurrentlyEmployed(true);
         } else {
@@ -581,14 +589,14 @@ public class Application {
         while(!validContact) {
             String header = "   Enter " + type + ": ";
             if(type.equals("LANDLINE")) {
-                information = UserInputUtils.landline(header);
+                information = userInput.landline(header);
             } else if (type.equals("MOBILE")) {
-                information = UserInputUtils.mobileNumber("   Enter mobile number: ");
+                information = userInput.mobileNumber("   Enter mobile number: ");
             } else if (type.equals("EMAIL")) {
-                information = UserInputUtils.string(header);
+                information = userInput.string(header);
             }
             contact.setInformation(information);
-            if (!ContactService.contactExist(contact)) {
+            if (!contactService.contactExist(contact)) {
                 System.out.println("    Contact details already being used. Please enter another.");
             } else {
                 validContact = true;
@@ -603,7 +611,7 @@ public class Application {
                                 + "\n    [1] LANDLINE" 
                                 + "\n    [2] MOBILE"
                                 + "\n    [3] EMAIL");
-        selectedOption = UserInputUtils.numberWithLimit("   Select option",3);
+        selectedOption = userInput.numberWithLimit("   Select option",3);
         switch(selectedOption) {
             case 1:
                 type = "LANDLINE";

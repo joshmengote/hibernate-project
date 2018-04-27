@@ -1,11 +1,10 @@
 package ecc.hibernate.xml.service;
 
 import ecc.hibernate.xml.model.Name;
-import org.apache.commons.lang3.StringUtils;
 
 public class NameService {
 
-    public static String nameToString(Name name) {
+    public String nameToString(Name name) {
         String title = "";
         String suffix = "";
         if (name.getTitle() != null && !name.getTitle().isEmpty()) {

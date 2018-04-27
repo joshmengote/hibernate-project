@@ -17,13 +17,13 @@ import org.hibernate.HibernateException;
 public class PersonDao {
     private static Session session;
     private static Transaction transaction;
-
-    private static void startOperation() throws HibernateException {
-        session = HibernateUtils.getSessionFactory().openSession();
+    private static HibernateUtils hibernateUtil = new HibernateUtils();
+    private void startOperation() throws HibernateException {
+        session = hibernateUtil.getSessionFactory().openSession();
         transaction = session.beginTransaction();
     }
 
-    public static void saveOrUpdate(Person person) {
+    public void saveOrUpdate(Person person) {
         try {
             startOperation();
             session.saveOrUpdate(person);
@@ -35,7 +35,7 @@ public class PersonDao {
         }
     }
 
-    public static Person find(long id) {
+    public Person find(long id) {
         Person person = null;
         try {
             startOperation();
@@ -50,7 +50,7 @@ public class PersonDao {
         return person;
     }
 
-    public static List findAll(){
+    public List findAll(){
         List<Person> objects = null;
         try {
             startOperation();
@@ -68,7 +68,7 @@ public class PersonDao {
         return objects;
     }   
 
-    public static void delete(Person person) {
+    public void delete(Person person) {
         try {
             startOperation();
             session.delete(person);
@@ -80,7 +80,7 @@ public class PersonDao {
         }
     }
 
-    public static List<Person> sort(int sortParamater, int sortOrder) {
+    public List<Person> sort(int sortParamater, int sortOrder) {
         List<Person> personList = null;
         final int ASCENDING = 1;
         final int DESCENDING = 2;

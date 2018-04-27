@@ -16,13 +16,13 @@ import org.hibernate.HibernateException;
 public class ContactDao {
     private static Session session;
     private static Transaction transaction;
-
-    private static void startOperation() throws HibernateException {
-        session = HibernateUtils.getSessionFactory().openSession();
+    private static HibernateUtils hibernateUtil = new HibernateUtils();
+    private void startOperation() throws HibernateException {
+        session = hibernateUtil.getSessionFactory().openSession();
         transaction = session.beginTransaction();
     }
 
-    public static void saveOrUpdate(Contact contact) {
+    public void saveOrUpdate(Contact contact) {
         try {
             startOperation();
             session.saveOrUpdate(contact);
@@ -34,7 +34,7 @@ public class ContactDao {
         }
     }
 
-    public static Contact find(Long id) {
+    public Contact find(Long id) {
         Contact contact = new Contact();
         try {
             startOperation();
@@ -48,7 +48,7 @@ public class ContactDao {
         return contact;
     }
 
-    public static void delete(Contact contact) {
+    public void delete(Contact contact) {
         try {
             startOperation();
             session.delete(contact);
@@ -60,7 +60,7 @@ public class ContactDao {
         }
     }
 
-    public static boolean contactExist(String contactInfo) {
+    public boolean contactExist(String contactInfo) {
         boolean exist = false;
         try {
             startOperation();
