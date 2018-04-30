@@ -595,6 +595,7 @@ public class Application {
             } else if (type.equals("EMAIL")) {
                 information = userInput.string(header);
             }
+            contact.setType(type);
             contact.setInformation(information);
             if (!contactService.contactExist(contact)) {
                 System.out.println("    Contact details already being used. Please enter another.");
