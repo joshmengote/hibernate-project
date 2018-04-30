@@ -6,8 +6,12 @@ import ecc.hibernate.xml.model.Role;
 import ecc.hibernate.xml.util.HibernateUtils;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.hibernate.Query;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.Hibernate;
@@ -15,6 +19,8 @@ import org.hibernate.HibernateException;
 
 
 public class PersonDao {
+    private static final int ASCENDING = 1;
+    private static final int DESCENDING = 2;
     private static Session session;
     private static Transaction transaction;
     private static HibernateUtils hibernateUtil = new HibernateUtils();
@@ -36,7 +42,7 @@ public class PersonDao {
     }
 
     public Person find(long id) {
-        Person person = null;
+        Person person = new Person();
         try {
             startOperation();
             person = (Person) session.get(Person.class, id);
@@ -51,11 +57,11 @@ public class PersonDao {
     }
 
     public List findAll(){
-        List<Person> objects = null;
+        List<Person> objects = new ArrayList();
         try {
             startOperation();
-            Query query = session.createQuery("FROM Person");
-            objects = query.list();
+            Criteria criteria = session.createCriteria(Person.class);
+            objects = criteria.list();
             for (Person person : objects) {
             Hibernate.initialize(person.getContacts());
             Hibernate.initialize(person.getRoles());
@@ -80,32 +86,51 @@ public class PersonDao {
         }
     }
 
-    public List<Person> sort(int sortParamater, int sortOrder) {
-        List<Person> personList = null;
-        final int ASCENDING = 1;
-        final int DESCENDING = 2;
-        
-        final int LAST_NAME = 1;
-        final int DATE_HIRED = 2;
-        String query = null;
-
-        if (sortParamater == LAST_NAME && sortOrder == ASCENDING) {
-            query = "FROM Person ORDER BY last_name ASC";
-        } else if (sortParamater == LAST_NAME && sortOrder == DESCENDING) {
-            query = "FROM Person ORDER BY last_name DESC";
-        } else if (sortParamater == DATE_HIRED && sortOrder == ASCENDING) {
-            query = "FROM Person ORDER BY date_hired ASC";
-        } else if (sortParamater == DATE_HIRED && sortOrder == DESCENDING) {
-            query = "FROM Person ORDER BY date_hired DESC";
-        }
+    public List<Person> findAllByLastName(int sortOrder) {
+        List<Person> personList = new ArrayList();;
+        String query = "FROM Person Order BY last_name ";
+        switch(sortOrder) {
+            case ASCENDING:
+                query += "ASC";
+                break;
+            case DESCENDING:
+                query += "DESC";
+                break;
+            }
         try {
             startOperation();
             personList = session.createQuery(query).list();
             for (Person person : personList) {
-            Hibernate.initialize(person.getContacts());
-            Hibernate.initialize(person.getRoles());
+                Hibernate.initialize(person.getContacts());
+                Hibernate.initialize(person.getRoles());
             }
             transaction.commit();
+        } catch (HibernateException e) {
+            transaction.rollback();
+        } finally {
+            session.close();
+        }
+        return personList;
+    }
+
+    public List<Person> findAllByDateHired(int sortOrder) {
+        List<Person> personList = new ArrayList();
+        try {
+            startOperation();
+            Criteria criteria = session.createCriteria(Person.class);
+            switch(sortOrder) {
+                case ASCENDING:
+                    criteria.addOrder(Order.asc("dateHired"));
+                    break;
+                case DESCENDING:
+                    criteria.addOrder(Order.desc("dateHired"));
+                    break;
+            }
+            personList = criteria.list();
+            for (Person person : personList) {
+                Hibernate.initialize(person.getContacts());
+                Hibernate.initialize(person.getRoles());
+            }
         } catch (HibernateException e) {
             transaction.rollback();
         } finally {

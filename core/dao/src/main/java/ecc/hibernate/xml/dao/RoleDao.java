@@ -6,7 +6,8 @@ import ecc.hibernate.xml.util.HibernateUtils;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.hibernate.Query;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.Hibernate;
@@ -53,8 +54,8 @@ public class RoleDao {
         List<Role> objects = new ArrayList();
         try {
             startOperation();
-            Query query = session.createQuery("FROM Role");
-            objects = query.list();
+            Criteria criteria = session.createCriteria(Role.class);
+            objects = criteria.list();
             transaction.commit();
         } catch (HibernateException e) {
             transaction.rollback();
@@ -80,10 +81,9 @@ public class RoleDao {
         boolean exist = false;
         try {
             startOperation();
-            String query = "FROM Role WHERE role = :ROLENAME";
-            Query queryObject = session.createQuery(query);
-            queryObject.setParameter("ROLENAME", roleName);
-            List list = queryObject.list();
+            Criteria criteria = session.createCriteria(Role.class);
+            criteria.add(Restrictions.eq("role", roleName));
+            List list = criteria.list();
             if (list.size() == 0) {
                 exist = true;
             }

@@ -6,7 +6,8 @@ import ecc.hibernate.xml.util.HibernateUtils;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.hibernate.Query;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.Hibernate;
@@ -64,10 +65,9 @@ public class ContactDao {
         boolean exist = false;
         try {
             startOperation();
-            String query = "FROM Contact WHERE information = :INFO";
-            Query queryObject = session.createQuery(query);
-            queryObject.setParameter("INFO", contactInfo);
-            List list = queryObject.list();
+            Criteria criteria = session.createCriteria(Contact.class);
+            criteria.add(Restrictions.eq("information", contactInfo));
+            List list = criteria.list();
             if (list.size() == 0) {
                 exist = true;
             }
