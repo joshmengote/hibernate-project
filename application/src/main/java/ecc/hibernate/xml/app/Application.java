@@ -308,15 +308,21 @@ public class Application {
         System.out.println("  ORDER:\n   [1] ASCENDING"
                                  + "\n   [2] DESCENDING");
         int order = userInput.numberWithLimit("  Select option",2);
-        if(parameter != 3) {
-            list = personService.sort(parameter, order);
-        } else {
-            list = personService.findAll();
-            if (order == 1) {
-                Collections.sort(list, Person.gwaAscending);
-            } else if (order == 2) {
-                Collections.sort(list, Person.gwaDescending);
-            }
+        switch (parameter) {
+            case 1:
+                list = personService.findAllByLastName(order);
+                break;
+            case 2:            
+                list = personService.findAllByDateHired(order);
+                break;
+            case 3:
+                list = personService.findAll();
+                if (order == 1) {
+                    Collections.sort(list, Person.gwaAscending);
+                } else if (order == 2) {
+                    Collections.sort(list, Person.gwaDescending);
+                }
+                break;
         }
         String stringList = personService.convertListToString(list);
         System.out.println();

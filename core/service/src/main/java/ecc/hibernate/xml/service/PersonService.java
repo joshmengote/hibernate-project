@@ -40,8 +40,12 @@ public class PersonService{
         personDao.saveOrUpdate(person);
     }
 
-    public List sort(int parameter, int order) {
-        return personDao.sort(parameter,order);
+    public List findAllByLastName(int order) {
+        return personDao.findAllByLastName(order);
+    }
+
+    public List findAllByDateHired(int direction) {
+        return personDao.findAllByDateHired(direction);
     }
 
     public List findAll() {
