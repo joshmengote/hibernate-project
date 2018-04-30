@@ -7,4 +7,10 @@
 		<version>${global.version}</version>
 	</parent>
 	<artifactId>model</artifactId>
+	<dependencies>
+		<dependency>
+		  <groupId>javax.persistence</groupId>
+		  <artifactId>persistence-api</artifactId>
+		</dependency>
+	</dependencies>
 </project>
