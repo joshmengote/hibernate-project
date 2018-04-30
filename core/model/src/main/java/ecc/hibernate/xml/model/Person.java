@@ -4,18 +4,39 @@ import java.util.Date;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Comparator;
-
+import javax.persistence.*;
+@Entity
+@Table(name = "Person")
 public class Person {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
 	private Long id;
-	private Float gwa;
-	private Date birthdate;
-	private Date dateHired;
+
+    @Column(name = "gwa")
+    private Float gwa;
+   
+    @Column(name = "birthdate")
+    private Date birthdate;
+   
+    @Column(name = "date_hired")
+    private Date dateHired;
+   
+    @Column(name = "currently_employed")
 	private Boolean currentlyEmployed;
 	
-	private Name name;
+    @Embedded
+    private Name name;
+   
+    @Embedded
 	private Address address;
-	private Set<Role> roles = new HashSet<Role>();
-	private Set<Contact> contacts = new HashSet<Contact>();
+	
+    @ManyToMany(cascade=CascadeType.ALL)  
+    @JoinTable(name="person_role", joinColumns=@JoinColumn(name="person_id"), inverseJoinColumns=@JoinColumn(name="role_id"))
+    private Set<Role> roles = new HashSet<Role>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "person_id")	
+    private Set<Contact> contacts = new HashSet<Contact>();
 
 	public Person() {}
 	public Person(Name name, Address address, Float gwa, Boolean currentlyEmployed,Date birthdate, Date dateHired) {

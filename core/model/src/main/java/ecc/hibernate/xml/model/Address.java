@@ -1,21 +1,28 @@
 package ecc.hibernate.xml.model;
 
-import java.util.Set;
-import java.util.HashSet;
+import javax.persistence.*;
 
+@Embeddable
 public class Address {
-	private String street;
-	private String barangay;
-	private String city;
-	private Integer zipCode;
-	
-	public Address() {}
-	public Address(String street, String barangay, String city, Integer zipCode) {
-		this.street = street;
-		this.barangay = barangay;
-		this.city = city;
-		this.zipCode = zipCode;
-	}
+    @Column(name = "street", nullable = false, length = 255)
+    private String street;
+    
+    @Column(name = "barangay", nullable = false, length = 255)
+    private String barangay;
+
+    @Column(name = "city", nullable = false, length = 255)
+    private String city;
+    
+    @Column(name = "zip", nullable = false)
+    private Integer zipCode;
+    
+    public Address() {}
+    public Address(String street, String barangay, String city, Integer zipCode) {
+        this.street = street;
+        this.barangay = barangay;
+        this.city = city;
+        this.zipCode = zipCode;
+    }
 
 	public String getStreet(){
 		return street;

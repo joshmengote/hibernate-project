@@ -1,8 +1,19 @@
 package ecc.hibernate.xml.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "contact", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "information")})
 public class Contact {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")    
     private Long id;
+
+    @Column(name = "type")
     private String type;
+
+    @Column(name = "information")
     private String information;
     
     public Contact() {}

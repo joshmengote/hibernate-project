@@ -1,10 +1,22 @@
 package ecc.hibernate.xml.model;
 
+import javax.persistence.*;
+
+@Embeddable
 public class Name {
-	private String firstName;
-	private String middleName;
-	private String lastName;
-	private String suffix;
+    @Column(name = "first_name", nullable = false, length =255)
+    private String firstName;
+
+    @Column(name = "middle_name", nullable = false, length =255)
+    private String middleName;
+    
+    @Column(name = "last_name", nullable = false, length =255)
+    private String lastName;
+    
+    @Column(name = "suffix", nullable = false, length =255)
+    private String suffix;
+    
+    @Column(name = "title", nullable = false, length =255)
 	private String title;
 	
 	public Name() {}

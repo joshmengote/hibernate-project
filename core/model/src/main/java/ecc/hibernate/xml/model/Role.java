@@ -2,11 +2,19 @@ package ecc.hibernate.xml.model;
 
 import java.util.Set;
 import java.util.HashSet;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "Roles")
 public class Role {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "role")
     private String roleName;
 
+    @ManyToMany(cascade=CascadeType.ALL, mappedBy="roles") 
     private Set<Person> person = new HashSet<Person>();
 
     public Role() {}
