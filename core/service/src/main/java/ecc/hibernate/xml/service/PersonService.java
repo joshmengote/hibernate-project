@@ -26,7 +26,7 @@ public class PersonService{
     private AddressService addressService;
     private RoleService roleService;
     private ContactService contactService;
-
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
     public PersonService() {
         personDao = new PersonDao();
         roleDao = new RoleDao();
@@ -69,8 +69,8 @@ public class PersonService{
         String idString = String.format("| %-3s|",person.getId());
         String nameString = String.format(" %-50s|",nameService.nameToString(name));
         String addressString = String.format(" %-50s|",addressService.addressToString(address));
-        String bdayString = String.format(" %-10s |", person.getBirthdate());
-        String dateHiredString = String.format(" %-10s |", person.getDateHired());
+        String bdayString = String.format(" %-10s |", dateFormat.format(person.getBirthdate()));
+        String dateHiredString = String.format(" %-10s |", dateFormat.format(person.getDateHired()));
         String gwaString = String.format(" %-4s |", person.getGwa());
         String currentlyEmployedString = String.format("%8s%-12s|", "", currentlyEmployed);
         String roleString = String.format(" %-30s|", roleService.convertSetToString(roles));
@@ -89,8 +89,6 @@ public class PersonService{
     }
 
     public String getPersonInfoAsString(Person person) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-
         String personInfo = "   Person ID #: " + person.getId() 
             + "\n   Name: " + nameService.nameToString(person.getName()) 
             + "\n   Address: " + addressService.addressToString(person.getAddress())  
