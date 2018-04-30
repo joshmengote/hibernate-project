@@ -31,33 +31,13 @@ public class ContactService {
         return contactDao.contactExist(contact.getInformation());
     }
 
-    public Contact stringToContact(String contactString) {
-        String[] contactArray;
-        String type;
-        String information;
-
-        contactArray = StringUtils.split(contactString, ':');
-        type = contactArray[0];
-        information = contactArray[1];
-        Contact contact = new Contact(type, information);
-        return contact;
-    }
-
-    public Set<Contact> stringToContactSet(String contactString) {
-        String[] contactArray;
-        Set<Contact> contacts = new HashSet<Contact>();
-        contactArray = StringUtils.split(contactString, '\n');
-        for (String singleContact : contactArray) {
-            contacts.add(stringToContact(singleContact));
-        }
-        return contacts;
-    }
-
     public String convertSetToString(Set<Contact> contacts) {
         String contactsString = "";
+        int count = 0;
         for(Contact contact : contacts) {
             contactsString += contact.getInformation();
-            if(contacts.size() != 1) {
+            count++;
+            if (count < contacts.size()) {
                 contactsString += ",";
             }
         }
