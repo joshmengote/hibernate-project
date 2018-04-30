@@ -5,11 +5,15 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Comparator;
 import javax.persistence.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 @Table(name = "Person")
 public class Person {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
     @Column(name = "gwa")
@@ -30,11 +34,13 @@ public class Person {
     @Embedded
 	private Address address;
 	
-    @ManyToMany(cascade=CascadeType.ALL)  
+    @ManyToMany
+    @Cascade({CascadeType.SAVE_UPDATE})  
     @JoinTable(name="person_role", joinColumns=@JoinColumn(name="person_id"), inverseJoinColumns=@JoinColumn(name="role_id"))
     private Set<Role> roles = new HashSet<Role>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(orphanRemoval = true)
+    @Cascade({CascadeType.ALL})
     @JoinColumn(name = "person_id")	
     private Set<Contact> contacts = new HashSet<Contact>();
 

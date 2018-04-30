@@ -6,7 +6,8 @@ import javax.persistence.*;
 @Table(name = "contact", uniqueConstraints = {
         @UniqueConstraint(columnNames = "information")})
 public class Contact {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")    
     private Long id;
 

@@ -3,18 +3,23 @@ package ecc.hibernate.xml.model;
 import java.util.Set;
 import java.util.HashSet;
 import javax.persistence.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @Entity
-@Table(name = "Roles")
+@Table(name = "Roles",uniqueConstraints = {
+        @UniqueConstraint(columnNames = "role")})
 public class Role {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     @Column(name = "role")
     private String roleName;
 
-    @ManyToMany(cascade=CascadeType.ALL, mappedBy="roles") 
+    @ManyToMany(mappedBy="roles") 
+    @Cascade({CascadeType.SAVE_UPDATE})
     private Set<Person> person = new HashSet<Person>();
 
     public Role() {}
