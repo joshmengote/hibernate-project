@@ -254,22 +254,30 @@ public class Application {
         System.out.println("\n  CONTACT DETAILS");
         System.out.println("   ADD PERSONAL CONTACT INFORMATION? \n     [1]YES\n     [2]NO");
         selectedOption = userInput.numberWithLimit("   Enter option", 2);
-        isFinishedAdding = false;
-        while(!isFinishedAdding) {
-            System.out.println("   ADD CONTACT");
-            Contact newContact = new Contact();
-            newContact = updateContactInformation(newContact, selectContactType());
-            person.getContacts().add(newContact);
-            System.out.println("   ADD ANOTHER CONTACT? \n     [1]YES\n     [2]NO");
-            selectedOption = userInput.numberWithLimit("   Enter option", 2);
-            if (selectedOption == 2) {
-                isFinishedAdding = true;
-            } else {
-                System.out.println();
-                System.out.println("  Added Person Contacts: " + contactService.convertSetToString(person.getContacts()));
-                System.out.println();
-            }
+        switch(selectedOption) {
+            case 1:
+                    isFinishedAdding = false;
+                    while(!isFinishedAdding) {
+                        System.out.println("   ADD CONTACT");
+                        Contact newContact = new Contact();
+                        newContact = updateContactInformation(newContact, selectContactType());
+                        person.getContacts().add(newContact);
+                        System.out.println("   ADD ANOTHER CONTACT? \n     [1]YES\n     [2]NO");
+                        selectedOption = userInput.numberWithLimit("   Enter option", 2);
+                        if (selectedOption == 2) {
+                            isFinishedAdding = true;
+                        } else {
+                            System.out.println();
+                            System.out.println("  Added Person Contacts: " + contactService.convertSetToString(person.getContacts()));
+                            System.out.println();
+                        }
+                    }
+                break;
+            case 2:
+                System.out.println("   No contacts added.");
+                break;
         }
+
         personService.saveOrUpdate(person); 
     }
 
