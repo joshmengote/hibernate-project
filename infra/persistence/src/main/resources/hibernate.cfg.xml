@@ -9,8 +9,8 @@
 	   	<property name = "hibernate.connection.username">postgres</property>
 	   	<property name = "hibernate.connection.password">ex1stgl0bal</property>
 
-		<mapping resource = "Person.hbm.xml"/>
-		<mapping resource = "Contact.hbm.xml"/>
-		<mapping resource = "Role.hbm.xml"/>
+		<mapping class = "ecc.hibernate.xml.model.Person"/>
+		<mapping class = "ecc.hibernate.xml.model.Contact"/>
+		<mapping class = "ecc.hibernate.xml.model.Role"/>
 	</session-factory>
 </hibernate-configuration>
