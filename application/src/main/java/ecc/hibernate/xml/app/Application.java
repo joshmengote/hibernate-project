@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Collections;
 
 
-import ecc.hibernate.xml.model.*;
+import ecc.hibernate.xml.dto.*;
 import ecc.hibernate.xml.util.*;
 import ecc.hibernate.xml.service.RoleService;
 import ecc.hibernate.xml.service.PersonService;
@@ -153,7 +152,7 @@ public class Application {
 
     private static void addNewRole() {
         listRoles();
-        Role role = new Role();
+        RoleDTO role = new RoleDTO();
         valid = false;
         while(!valid) {
             role.setRoleName(userInput.string("  Enter New Role: "));
@@ -174,7 +173,7 @@ public class Application {
             roleManagementMenu();
         }
         listRoles();
-        Role role = selectRole("Update Role");
+        RoleDTO role = selectRole("Update Role");
         String newRoleName = "";
         valid = false;
         while(!valid) {
@@ -198,10 +197,10 @@ public class Application {
         }
         listRoles();
         valid = false;
-        Role role = new Role();
+        RoleDTO role = new RoleDTO();
         while(!valid) {
             role = selectRole("   Delete Role");
-            if (role.getPerson().size() == 0) {
+            if (roleService.roleNotUsed(role)) {
                 roleService.delete(role);
                 valid = true;
             } else {
@@ -224,7 +223,7 @@ public class Application {
             System.out.println(" Add roles before adding people.");
             personManagementMenu();
         }
-        Person person = new Person();
+        PersonDTO person = new PersonDTO();
         person = updatePersonProperties(person);
         System.out.println();
 
@@ -236,7 +235,7 @@ public class Application {
                 break;
             }
             printAvailableRolesFor(person);
-            Role role = selectPersonRole(person, "   Add Role");
+            RoleDTO role = selectPersonRole(person, "   Add Role");
             person.getRoles().add(role);
             System.out.println("   ADD ANOTHER ROLE? \n     [1]YES\n     [2]NO");
             selectedOption = userInput.numberWithLimit("   Enter option", 2);
@@ -259,7 +258,7 @@ public class Application {
                     isFinishedAdding = false;
                     while(!isFinishedAdding) {
                         System.out.println("   ADD CONTACT");
-                        Contact newContact = new Contact();
+                        ContactDTO newContact = new ContactDTO();
                         newContact = updateContactInformation(newContact, selectContactType());
                         person.getContacts().add(newContact);
                         System.out.println("   ADD ANOTHER CONTACT? \n     [1]YES\n     [2]NO");
@@ -286,7 +285,7 @@ public class Application {
             System.out.println(" No person added yet");
             return;
         }
-        Person person = selectPersonFromList();
+        PersonDTO person = selectPersonFromList();
         System.out.println("  Current Data:");        
         String personInfo = personService.getPersonInfoAsString(person);
         System.out.println(personInfo);
@@ -317,11 +316,7 @@ public class Application {
                 break;
             case 3:
                 list = personService.findAll();
-                if (order == 1) {
-                    Collections.sort(list, Person.gwaAscending);
-                } else if (order == 2) {
-                    Collections.sort(list, Person.gwaDescending);
-                }
+                list = personService.sortByGwa(list, order);
                 break;
         }
         String stringList = personService.convertListToString(list);
@@ -337,7 +332,7 @@ public class Application {
             System.out.println(" No person added yet");
             return;
         }
-        Person person = selectPersonFromList();
+        PersonDTO person = selectPersonFromList();
         personService.delete(person);
     }
 
@@ -346,13 +341,13 @@ public class Application {
             System.out.println(" No person added yet");
             return;
         }
-        Person person = selectPersonFromList();
+        PersonDTO person = selectPersonFromList();
         if(!personService.hasAvailableRolesFor(person)) {
             System.out.println("    No more available roles to add");
             return;
         }
         printAvailableRolesFor(person);
-        Role role = selectPersonRole(person, "   Add person role");
+        RoleDTO role = selectPersonRole(person, "   Add person role");
         person.getRoles().add(role);
         personService.saveOrUpdate(person);
     }
@@ -362,8 +357,8 @@ public class Application {
             System.out.println(" No person added yet");
             return;
         }
-        Person person = selectPersonFromList();
-        List<Role> roles = new ArrayList(person.getRoles());
+        PersonDTO person = selectPersonFromList();
+        List<RoleDTO> roles = new ArrayList(person.getRoles());
         if (roles.size() == 0) {
             System.out.println("    No more available roles to remove");
             return;
@@ -375,7 +370,7 @@ public class Application {
         boolean valid = false;
         while(!valid) {
             Long roleId = (long) userInput.number("  Remove Role(Enter ID): ");
-            for (Role role : roles) {
+            for (RoleDTO role : roles) {
                 if (role.getId() == roleId) {
                     person.getRoles().remove(role);
                     count++;
@@ -395,10 +390,10 @@ public class Application {
             System.out.println(" No person added yet");
             return;
         }
-        Person person = selectPersonFromList();
+        PersonDTO person = selectPersonFromList();
         printPersonContacts(person);
         System.out.println("   ADD CONTACT");
-        Contact contact = new Contact();
+        ContactDTO contact = new ContactDTO();
         contact = updateContactInformation(contact, selectContactType());
         person.getContacts().add(contact);
         personService.saveOrUpdate(person);
@@ -409,13 +404,13 @@ public class Application {
             System.out.println(" No person added yet");
             return;
         }
-        Person person = selectPersonFromList();
+        PersonDTO person = selectPersonFromList();
         if(person.getContacts().size() == 0) {
             System.out.println("    No contacts to update.");
             return;
         }
         printPersonContacts(person);
-        Contact contact = selectContact(person, "   Update contact");
+        ContactDTO contact = selectContact(person, "   Update contact");
         contact = updateContactInformation(contact, contact.getType());
         contactService.saveOrUpdate(contact);
     }
@@ -425,13 +420,13 @@ public class Application {
             System.out.println(" No person added yet");
             return;
         }
-        Person person = selectPersonFromList();
+        PersonDTO person = selectPersonFromList();
         if(person.getContacts().size() == 0) {
             System.out.println("    No contacts to delete.");
             return;
         }
         printPersonContacts(person);
-        Contact contact = selectContact(person, "   Delete contact");
+        ContactDTO contact = selectContact(person, "   Delete contact");
         contactService.delete(contact);
     }
 
@@ -443,7 +438,7 @@ public class Application {
         System.out.println(peopleString);    
     }
 
-    private static void printAvailableRolesFor(Person person) {
+    private static void printAvailableRolesFor(PersonDTO person) {
         List availableRoles = personService.getAvailableRolesFor(person);
         String rolesString = roleService.convertListToString(availableRoles);
         System.out.println();
@@ -451,8 +446,8 @@ public class Application {
         System.out.println("   ID   ROLE\n" + rolesString);
     }
 
-    private static void printPersonContacts(Person person) {
-        List<Contact> contacts = new ArrayList(person.getContacts());
+    private static void printPersonContacts(PersonDTO person) {
+        List<ContactDTO> contacts = new ArrayList(person.getContacts());
         String contactString = contactService.convertListToString(contacts);
         System.out.println("\n  PERSON ID #: " + person.getId());
         System.out.println("   CONTACTS:");
@@ -460,8 +455,8 @@ public class Application {
         System.out.println(contactString);
     }
 
-    private static Person selectPersonFromList() {
-        Person person = new Person();
+    private static PersonDTO selectPersonFromList() {
+        PersonDTO person = new PersonDTO();
         valid = false;
         printPersonList();
         while(!valid) {
@@ -476,8 +471,8 @@ public class Application {
         return person;
     }
 
-    private static Role selectPersonRole(Person person, String header) {
-        Role role = new Role();
+    private static RoleDTO selectPersonRole(PersonDTO person, String header) {
+        RoleDTO role = new RoleDTO();
         valid = false;
         while(!valid) {
             try {
@@ -494,8 +489,8 @@ public class Application {
         return role;
     }
 
-    private static Role selectRole(String header) {
-        Role role = new Role();
+    private static RoleDTO selectRole(String header) {
+        RoleDTO role = new RoleDTO();
         valid = false;
         while(!valid) {
             try {
@@ -509,14 +504,14 @@ public class Application {
         return role;
     }
 
-    private static Contact selectContact(Person person, String header) {
-        Contact contact = new Contact();
+    private static ContactDTO selectContact(PersonDTO person, String header) {
+        ContactDTO contact = new ContactDTO();
         valid = false;
         while(!valid) {
             try {
                 contact = contactService.find((long) userInput.number(header + "(Enter ID): "));
                 int count = 0;
-                for (Contact personContacts : person.getContacts()) {
+                for (ContactDTO personContacts : person.getContacts()) {
                     if (contact.getInformation().equals(personContacts.getInformation())) {
                         count++;
                     }
@@ -533,24 +528,20 @@ public class Application {
         return contact;
     }
 
-    private static Person updatePersonProperties(Person person) {
+    private static PersonDTO updatePersonProperties(PersonDTO person) {
         System.out.println("  NAME");
-        Name name = new Name();
-        name.setTitle(userInput.stringWithNull("   Title: "));
-        name.setFirstName(userInput.string("   First Name: "));
-        name.setMiddleName(userInput.string("   Middle Name: "));
-        name.setLastName(userInput.string("   Last Name: "));
-        name.setSuffix(userInput.stringWithNull("   Suffix: "));
-        person.setName(name);
+        person.setTitle(userInput.stringWithNull("   Title: ", 20));
+        person.setFirstName(userInput.stringWithLimit("   First Name: ", 20));
+        person.setMiddleName(userInput.stringWithLimit("   Middle Name: ", 20));
+        person.setLastName(userInput.stringWithLimit("   Last Name: ", 20));
+        person.setSuffix(userInput.stringWithNull("   Suffix: ", 20));
         System.out.println();
 
         System.out.println("  ADDRESS");
-        Address address = new Address();
-        address.setStreet(userInput.string("   Street: "));
-        address.setBarangay(userInput.string("   Barangay: "));
-        address.setCity(userInput.string("   City: "));
-        address.setZipCode(userInput.number("   Zip Code: "));
-        person.setAddress(address);
+        person.setStreet(userInput.stringWithLimit("   Street: ", 255));
+        person.setBarangay(userInput.stringWithLimit("   Barangay: ", 255));
+        person.setCity(userInput.stringWithLimit("   City: ", 255));
+        person.setZipCode(userInput.numberWithLimit("   Zip Code", 9999));
         System.out.println();
 
         System.out.println("  BIRTHDATE (MM/DD/YYYY)");
@@ -588,16 +579,11 @@ public class Application {
         System.out.println("  CURRENTLY EMPLOYED?");
         System.out.println("   [1] YES" + "\n   [2] NO");
         int employedOption = userInput.numberWithLimit("   Select option",2);
-        if (employedOption == 1) {
-            person.setCurrentlyEmployed(true);
-        } else {
-            person.setCurrentlyEmployed(false);
-        }
-
+        person.setCurrentlyEmployed( (employedOption == 1) ? true : false);
         return person;
     }
 
-    private static Contact updateContactInformation(Contact contact, String type) {
+    private static ContactDTO updateContactInformation(ContactDTO contact, String type) {
         String information = "";
         boolean validContact = false;
         while(!validContact) {
@@ -630,6 +616,7 @@ public class Application {
         switch(selectedOption) {
             case 1:
                 type = "LANDLINE";
+                break;
             case 2:
                 type = "MOBILE";
                 break;
