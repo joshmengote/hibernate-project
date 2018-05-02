@@ -7,14 +7,9 @@ public class NameService {
     public String nameToString(Name name) {
         String title = "";
         String suffix = "";
-        if (name.getTitle() != null && !name.getTitle().isEmpty()) {
-            title = name.getTitle() + ". ";
-        } else if (name.getSuffix() != null && !name.getSuffix().isEmpty()) {
-            suffix = ", " + name.getSuffix();
-        } else {
-            title = "";
-            suffix = "";
-        }
+
+        title = (name.getTitle() != null && !name.getTitle().isEmpty()) ? name.getTitle() + "." : "";
+        suffix = (name.getSuffix() != null && !name.getSuffix().isEmpty()) ? "," + name.getSuffix() : "";
 
         return title + name.getFirstName() + " " 
                 + name.getMiddleName() + " " 
