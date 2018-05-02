@@ -20,5 +20,9 @@
         	<groupId>ecc.hibernate.xml</groupId>
         	<artifactId>dao</artifactId>
         </dependency>
+        <dependency>
+        	<groupId>ecc.hibernate.xml</groupId>
+        	<artifactId>dto</artifactId>
+        </dependency>
 	</dependencies>
 </project>
