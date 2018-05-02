@@ -91,7 +91,7 @@ public class UserInputUtils {
         return inputString;
     }
 
-    public String stringWithNull (String header) {
+    public String stringWithNull (String header, int characterLimit) {
         String inputString = "";
         boolean validInput = false;
         while(!validInput) {
@@ -104,6 +104,25 @@ public class UserInputUtils {
                     inputString = "";
                     break;
                 }
+                validInput = false;
+            } else if (inputString.length() > characterLimit) {
+                System.out.println("\t Enter a string with up to " + characterLimit + " characters only.");
+                validInput = false;
+            } else {
+                validInput = true;
+            }
+        }
+        return inputString;
+    }
+
+    public String stringWithLimit(String header, int characterLimit) {
+        String inputString = "";
+        boolean validInput = false;
+        while(!validInput) {
+            System.out.print(header);
+            inputString = scan.nextLine();
+            if (StringUtils.isBlank(inputString) || inputString.length() > characterLimit) {
+                System.out.println("\t Enter a string with up to " + characterLimit + " characters only.");
                 validInput = false;
             } else {
                 validInput = true;
