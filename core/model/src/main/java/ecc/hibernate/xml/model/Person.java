@@ -5,10 +5,14 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Comparator;
 import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "Person")
 public class Person {
     @Id
@@ -41,7 +45,7 @@ public class Person {
 
     @OneToMany(orphanRemoval = true)
     @Cascade({CascadeType.ALL})
-    @JoinColumn(name = "person_id")	
+    @JoinColumn(name = "person_id") 
     private Set<Contact> contacts = new HashSet<Contact>();
 
 	public Person() {}
@@ -57,7 +61,7 @@ public class Person {
 	public Long getId() {
 		return id;
 	}
-	private void setId(Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

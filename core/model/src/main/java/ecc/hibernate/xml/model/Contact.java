@@ -1,8 +1,12 @@
 package ecc.hibernate.xml.model;
 
 import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "contact", uniqueConstraints = {
         @UniqueConstraint(columnNames = "information")})
 public class Contact {
@@ -26,7 +30,7 @@ public class Contact {
     public Long getId() {
         return id;
     }
-    private void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

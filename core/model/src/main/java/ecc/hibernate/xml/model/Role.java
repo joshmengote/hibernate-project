@@ -3,10 +3,14 @@ package ecc.hibernate.xml.model;
 import java.util.Set;
 import java.util.HashSet;
 import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "Roles",uniqueConstraints = {
         @UniqueConstraint(columnNames = "role")})
 public class Role {
@@ -30,7 +34,7 @@ public class Role {
     public Long getId() {
         return id;
     }
-    private void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
