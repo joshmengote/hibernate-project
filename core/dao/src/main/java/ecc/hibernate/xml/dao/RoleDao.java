@@ -55,6 +55,7 @@ public class RoleDao {
         try {
             startOperation();
             Criteria criteria = session.createCriteria(Role.class);
+            criteria.setCacheable(true);
             objects = criteria.list();
             transaction.commit();
         } catch (HibernateException e) {
@@ -82,7 +83,8 @@ public class RoleDao {
         try {
             startOperation();
             Criteria criteria = session.createCriteria(Role.class);
-            criteria.add(Restrictions.eq("role", roleName));
+            criteria.add(Restrictions.eq("roleName", roleName));
+            criteria.setCacheable(true);
             List list = criteria.list();
             if (list.size() == 0) {
                 exist = true;

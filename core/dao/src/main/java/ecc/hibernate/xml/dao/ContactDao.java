@@ -67,6 +67,7 @@ public class ContactDao {
             startOperation();
             Criteria criteria = session.createCriteria(Contact.class);
             criteria.add(Restrictions.eq("information", contactInfo));
+            criteria.setCacheable(true);
             List list = criteria.list();
             if (list.size() == 0) {
                 exist = true;

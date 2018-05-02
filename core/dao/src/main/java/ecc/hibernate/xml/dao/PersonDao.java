@@ -61,6 +61,7 @@ public class PersonDao {
         try {
             startOperation();
             Criteria criteria = session.createCriteria(Person.class);
+            criteria.setCacheable(true);
             objects = criteria.list();
             for (Person person : objects) {
             Hibernate.initialize(person.getContacts());
@@ -89,14 +90,7 @@ public class PersonDao {
     public List<Person> findAllByLastName(int sortOrder) {
         List<Person> personList = new ArrayList();;
         String query = "FROM Person Order BY last_name ";
-        switch(sortOrder) {
-            case ASCENDING:
-                query += "ASC";
-                break;
-            case DESCENDING:
-                query += "DESC";
-                break;
-            }
+        query += ((sortOrder == ASCENDING) ? "ASC" : "DESC");
         try {
             startOperation();
             personList = session.createQuery(query).list();
@@ -118,14 +112,8 @@ public class PersonDao {
         try {
             startOperation();
             Criteria criteria = session.createCriteria(Person.class);
-            switch(sortOrder) {
-                case ASCENDING:
-                    criteria.addOrder(Order.asc("dateHired"));
-                    break;
-                case DESCENDING:
-                    criteria.addOrder(Order.desc("dateHired"));
-                    break;
-            }
+            criteria.addOrder((sortOrder == ASCENDING) ? Order.asc("dateHired") : Order.desc("dateHired"));
+            criteria.setCacheable(true);
             personList = criteria.list();
             for (Person person : personList) {
                 Hibernate.initialize(person.getContacts());
