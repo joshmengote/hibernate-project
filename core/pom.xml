@@ -10,6 +10,7 @@
 	<packaging>pom</packaging>
 	<modules>
         <module>dao</module>
+        <module>dto</module>
         <module>service</module>
 		<module>model</module>
 	</modules>
@@ -28,6 +29,11 @@
 	        <dependency>
 	            <groupId>ecc.hibernate.xml</groupId>
 	            <artifactId>dao</artifactId>
+	            <version>${global.version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>ecc.hibernate.xml</groupId>
+	            <artifactId>dto</artifactId>
 	            <version>${global.version}</version>
 	        </dependency>
             <dependency>
