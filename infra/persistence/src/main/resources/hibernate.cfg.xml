@@ -8,7 +8,10 @@
 	   	<property name = "hibernate.connection.url">jdbc:postgresql://localhost:5432/${database.name}</property>
 	   	<property name = "hibernate.connection.username">postgres</property>
 	   	<property name = "hibernate.connection.password">ex1stgl0bal</property>
-
+	   	<property name = "hibernate.cache.use_second_level_cache">true</property>
+	   	<property name="hibernate.cache.use_query_cache">true</property>
+	   	<property name = "hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
+	   	
 		<mapping class = "ecc.hibernate.xml.model.Person"/>
 		<mapping class = "ecc.hibernate.xml.model.Contact"/>
 		<mapping class = "ecc.hibernate.xml.model.Role"/>
