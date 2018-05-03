@@ -89,11 +89,13 @@ public class PersonDao {
 
     public List<Person> findAllByLastName(int sortOrder) {
         List<Person> personList = new ArrayList();;
-        String query = "FROM Person Order BY last_name ";
-        query += ((sortOrder == ASCENDING) ? "ASC" : "DESC");
+        String queryString = "FROM Person Order BY last_name ";
+        queryString += ((sortOrder == ASCENDING) ? "ASC" : "DESC");
         try {
             startOperation();
-            personList = session.createQuery(query).list();
+            Query query = session.createQuery(queryString); 
+            query.setCacheable(true);
+            personList = query.list();
             for (Person person : personList) {
                 Hibernate.initialize(person.getContacts());
                 Hibernate.initialize(person.getRoles());
