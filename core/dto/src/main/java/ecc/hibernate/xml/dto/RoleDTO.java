@@ -7,7 +7,6 @@ import ecc.hibernate.xml.model.Person;
 public class RoleDTO {
     private Long id;
     private String roleName;
-    private Set<Person> person = new HashSet<Person>();
 
     public RoleDTO() {}
     public RoleDTO(String roleName) {
@@ -26,11 +25,5 @@ public class RoleDTO {
     }
     public void setRoleName(String roleName) {
         this.roleName = roleName;
-    }
-    public Set<Person> getPerson() {
-        return person;
-    }
-    public void setPerson(Set<Person> person) {
-        this.person = person;
     }
 }
