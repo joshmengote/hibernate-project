@@ -55,6 +55,11 @@
 			    <artifactId>slf4j-api</artifactId>
 			    <version>1.7.25</version>
 			</dependency>
+			<dependency>
+			    <groupId>ma.glasnost.orika</groupId>
+			    <artifactId>orika-core</artifactId>
+			    <version>1.5.2</version>
+			</dependency>
        	</dependencies>
    </dependencyManagement>
 
