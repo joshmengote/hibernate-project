@@ -1,4 +1,4 @@
-package ecc.hibernate.xml.model;
+package ecc.hibernate.xml.dao;
 
 import ecc.hibernate.xml.util.HibernateUtils;
 import org.hibernate.HibernateException;
@@ -11,13 +11,12 @@ import org.hibernate.criterion.Restrictions;
 import java.util.List;
 import java.util.ArrayList;
 
-public abstract class GenericDao {
+public class GenericDao {
 
-    private Session session;
-    private Transaction tx;
+    protected Session session;
+    protected Transaction tx;
     private HibernateUtils hibernateUtil = new HibernateUtils();
     public GenericDao() {
-        HibernateFactory.buildIfNeeded();
     }
 
     protected void startOperation() throws HibernateException {
@@ -25,7 +24,7 @@ public abstract class GenericDao {
         tx = session.beginTransaction();
     }
 
-    protected void saveOrUpdate(Object object) {
+    public void saveOrUpdate(Object object) {
         try {
             startOperation();
             session.saveOrUpdate(object);
@@ -37,7 +36,7 @@ public abstract class GenericDao {
         }
     }
 
-    protected void delete(Object object) {
+    public void delete(Object object) {
         try {
             startOperation();
             session.delete(object);
@@ -49,11 +48,11 @@ public abstract class GenericDao {
         }
     }
 
-    protected Object find(Class clazz, Long id) {
+    public Object find(Class clazz, Long id) {
         Object object = new Object();
         try {
             startOperation();
-            object = session.load(clazz, id);
+            object = session.get(clazz, id);
             tx.commit();
         } catch (HibernateException e) {
             tx.rollback();
@@ -63,7 +62,7 @@ public abstract class GenericDao {
         return object;
     }
 
-    protected List findAll(Class clazz) {
+    public List findAll(Class clazz) {
         List objects = new ArrayList();
         try {
             startOperation();
@@ -77,6 +76,26 @@ public abstract class GenericDao {
             session.close();
         }
         return objects;
+    }
+
+    public boolean exists(Class clazz, String field, String value) {
+        boolean exist = false;
+        try {
+            startOperation();
+            Criteria criteria = session.createCriteria(clazz);
+            criteria.add(Restrictions.eq(field, value));
+            criteria.setCacheable(true);
+            List list = criteria.list();
+            if (list.size() == 0) {
+                exist = true;
+            }
+            tx.commit();
+        } catch (HibernateException e) {
+            tx.rollback();
+        } finally {
+            session.close();
+        }
+        return exist;
     }
 
 }
