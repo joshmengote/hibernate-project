@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import ecc.hibernate.xml.model.Role;
 import ecc.hibernate.xml.dto.RoleDTO;
 import ecc.hibernate.xml.dao.RoleDao;
+import ecc.hibernate.xml.dao.GenericDao;
 
 public class RoleService{
     private RoleDao roleDao;
-    
 
     public RoleService() {
         roleDao = new RoleDao();
@@ -26,7 +26,7 @@ public class RoleService{
 
     public List findAll() {
         List<RoleDTO> rolesDTO = new ArrayList();
-        List<Role> roles = roleDao.findAll();
+        List<Role> roles = roleDao.findAll(Role.class);
         for (Role role : roles) {
             rolesDTO.add(entityToDTO(role));
         }
@@ -38,13 +38,13 @@ public class RoleService{
     }
 
     public boolean isEmpty() {
-        return (roleDao.findAll().size() == 0);
+        return (roleDao.findAll(Role.class).size() == 0);
     }
 
 
     public boolean roleExist(RoleDTO roleDTO) {
         Role role = dtoToEntity(roleDTO);
-        return roleDao.roleExist(role.getRoleName());
+        return roleDao.exists(Role.class, "roleName", role.getRoleName());
     }
 
     public boolean roleNotUsed(RoleDTO roleDTO) {

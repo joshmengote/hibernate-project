@@ -15,7 +15,7 @@ import ecc.hibernate.xml.dto.*;
 import ecc.hibernate.xml.dao.PersonDao;
 import ecc.hibernate.xml.dao.RoleDao;
 
-public class PersonService{
+public class PersonService {
     private static final int ASCENDING = 1;
     private static final int DESCENDING = 1;
     private PersonDao personDao;
@@ -140,7 +140,7 @@ public class PersonService{
 
     public List getAvailableRolesFor(PersonDTO personDTO) {
         Person person = dtoToEntity(personDTO);
-        List<Role> roles = roleDao.findAll();
+        List<Role> roles = roleDao.findAll(Role.class);
         List<Role> personRolesList = new ArrayList(person.getRoles());
         List<Role> intersection = new ArrayList();
         for (Role role : roles) {

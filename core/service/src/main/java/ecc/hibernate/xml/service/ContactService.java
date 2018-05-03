@@ -2,7 +2,7 @@ package ecc.hibernate.xml.service;
 
 import ecc.hibernate.xml.model.Contact;
 import ecc.hibernate.xml.dto.ContactDTO;
-import ecc.hibernate.xml.dao.ContactDao;
+import ecc.hibernate.xml.dao.GenericDao;
 
 import java.util.List;
 import java.util.Set;
@@ -10,9 +10,9 @@ import java.util.HashSet;
 import org.apache.commons.lang3.StringUtils;
 
 public class ContactService {
-    private ContactDao contactDao;
+    private GenericDao contactDao;
     public ContactService() {
-        contactDao = new ContactDao();
+        contactDao = new GenericDao();
     }
 
     public void saveOrUpdate(ContactDTO contactDTO) {
@@ -24,12 +24,12 @@ public class ContactService {
     }
 
     public ContactDTO find(Long id) {
-        return entityToDTO(contactDao.find(id));
+        return entityToDTO((Contact)contactDao.find(Contact.class, id));
     }
 
     public boolean contactExist(ContactDTO contactDTO) {
         Contact contact = dtoToEntity(contactDTO);
-        return contactDao.contactExist(contact.getInformation());
+        return contactDao.exists(Contact.class, "information", contact.getInformation());
     }
 
     public String convertSetToString(Set<ContactDTO> contacts) {
