@@ -200,11 +200,11 @@ public class Application {
         RoleDTO role = new RoleDTO();
         while(!valid) {
             role = selectRole("   Delete Role");
-            if (roleService.roleNotUsed(role)) {
+            if (roleService.roleNotUsed(role.getId())) {
                 roleService.delete(role);
                 valid = true;
             } else {
-                System.out.println("\t Can't delete, role is in used!");
+                System.out.println("\t Can't delete, role is being used!");
             }
         }
         roleManagementMenu();
