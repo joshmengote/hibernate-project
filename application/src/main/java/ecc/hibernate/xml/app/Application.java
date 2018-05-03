@@ -427,6 +427,7 @@ public class Application {
         }
         printPersonContacts(person);
         ContactDTO contact = selectContact(person, "   Delete contact");
+        personService.removeContact(person, contact);
         contactService.delete(contact);
     }
 
@@ -541,7 +542,7 @@ public class Application {
         person.setStreet(userInput.stringWithLimit("   Street: ", 255));
         person.setBarangay(userInput.stringWithLimit("   Barangay: ", 255));
         person.setCity(userInput.stringWithLimit("   City: ", 255));
-        person.setZipCode(userInput.numberWithLimit("   Zip Code", 9999));
+        person.setZipCode(userInput.zipCode());
         System.out.println();
 
         System.out.println("  BIRTHDATE (MM/DD/YYYY)");

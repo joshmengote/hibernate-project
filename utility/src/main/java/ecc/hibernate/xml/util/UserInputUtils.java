@@ -180,4 +180,23 @@ public class UserInputUtils {
         return inputString;
     }
 
+    public int zipCode () {
+        int zipCode = 0;
+        boolean inputValid = false;
+        while(!inputValid) {
+            try {
+                System.out.print("   Zip Code: ");
+                String readString = scan.nextLine();
+                if (StringUtils.isBlank(readString) || readString.length() != 4) {
+                    System.out.println("\tEnter 4-digit zip code.");
+                } else {
+                    zipCode = Integer.parseInt(readString);
+                    inputValid = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("\tInvalid Input! Input not a number!");
+            }
+        }
+        return zipCode;
+    }
 }
