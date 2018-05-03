@@ -1,13 +1,14 @@
-HIBERNATE PART 1 -XML
+HIBERNATE PART 2 -ANNOTATIONS
 ===
 
-Exist Code Camp - Exercise 7: Hibernate XML
+Exist Code Camp - Exercise 7: Hibernate Annotations
 
 Setup
 ---
 * Clone repository
 	
 		git clone https://github.com/jmengote16/hibernate-project.git
+		git checkout origin/annotations
 	
 Command-line Instructions
 ---
