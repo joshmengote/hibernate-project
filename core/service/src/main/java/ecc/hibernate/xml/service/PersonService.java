@@ -102,11 +102,13 @@ public class PersonService {
     }
 
     public void removeContact(PersonDTO personDTO, ContactDTO contactDTO) {
+        ContactDTO contactToBeRemoved = new ContactDTO();
         for (ContactDTO contact : personDTO.getContacts()) {
             if( contact.getInformation().equals(contactDTO.getInformation())) {
-                personDTO.getContacts().remove(contact);
+                contactToBeRemoved = contact;
             }
         }
+        personDTO.getContacts().remove(contactToBeRemoved);
         personDao.saveOrUpdate(dtoToEntity(personDTO));
     }
 
