@@ -6,13 +6,20 @@ import ecc.hibernate.xml.dao.GenericDao;
 
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
-import org.apache.commons.lang3.StringUtils;
+
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
 
 public class ContactService {
     private GenericDao contactDao;
+    private MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+    private MapperFacade mapper;
+
     public ContactService() {
         contactDao = new GenericDao();
+        mapperFactory.classMap(Contact.class, ContactDTO.class).byDefault();
+        mapper = mapperFactory.getMapperFacade();
     }
 
     public void saveOrUpdate(ContactDTO contactDTO) {
@@ -53,19 +60,12 @@ public class ContactService {
         return contactString;
     }
 
-    public Contact dtoToEntity(ContactDTO contactDTO) {
-        Contact contact = new Contact();
-        contact.setId(contactDTO.getId());
-        contact.setType(contactDTO.getType());
-        contact.setInformation(contactDTO.getInformation());
-        return contact;
-    }
-
     public ContactDTO entityToDTO(Contact contact) {
-        ContactDTO contactDTO = new ContactDTO();
-        contactDTO.setId(contact.getId());
-        contactDTO.setType(contact.getType());
-        contactDTO.setInformation(contact.getInformation());
-        return contactDTO;
+        return mapper.map(contact, ContactDTO.class);
+
     }
+    public Contact dtoToEntity(ContactDTO contactDTO) {
+        return mapper.map(contactDTO, Contact.class);
+    } 
+
 }

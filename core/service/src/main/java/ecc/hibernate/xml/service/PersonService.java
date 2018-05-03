@@ -11,10 +11,12 @@ import java.util.Collections;
 
 import ecc.hibernate.xml.model.*;
 import ecc.hibernate.xml.dto.*;
-
 import ecc.hibernate.xml.dao.PersonDao;
 import ecc.hibernate.xml.dao.RoleDao;
 
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
 public class PersonService {
     private static final int ASCENDING = 1;
     private static final int DESCENDING = 1;
@@ -25,6 +27,8 @@ public class PersonService {
     private RoleService roleService;
     private ContactService contactService;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+    private MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+    private MapperFacade mapper;             
 
     public PersonService() {
         personDao = new PersonDao();
@@ -33,6 +37,18 @@ public class PersonService {
         addressService = new AddressService();
         roleService = new RoleService();
         contactService = new ContactService();
+        mapperFactory.classMap(Person.class, PersonDTO.class).byDefault()
+                        .field("name.firstName", "firstName")
+                        .field("name.middleName", "middleName")
+                        .field("name.lastName", "lastName")
+                        .field("name.title", "title")
+                        .field("name.suffix", "suffix")
+                        .field("address.street", "street")
+                        .field("address.barangay", "barangay")
+                        .field("address.city", "city")
+                        .field("address.zipCode", "zipCode")
+                        .register();
+        mapper = mapperFactory.getMapperFacade();
     }
 
     public void saveOrUpdate(PersonDTO personDTO) {
@@ -179,66 +195,10 @@ public class PersonService {
     }
 
     private PersonDTO entityToDTO(Person person) {
-        PersonDTO personDTO = new PersonDTO();
+        return mapper.map(person, PersonDTO.class);
 
-        personDTO.setId(person.getId());
-        personDTO.setFirstName(person.getName().getFirstName());
-        personDTO.setLastName(person.getName().getLastName());
-        personDTO.setMiddleName(person.getName().getMiddleName());
-        personDTO.setSuffix(person.getName().getSuffix());
-        personDTO.setTitle(person.getName().getTitle());
-        personDTO.setStreet(person.getAddress().getStreet());
-        personDTO.setBarangay(person.getAddress().getBarangay());
-        personDTO.setCity(person.getAddress().getCity());
-        personDTO.setZipCode(person.getAddress().getZipCode());
-        personDTO.setDateHired(person.getDateHired());
-        personDTO.setBirthdate(person.getBirthdate());
-        personDTO.setGwa(person.getGwa());
-        personDTO.setCurrentlyEmployed(person.getCurrentlyEmployed());
-        Set rolesDTO = new HashSet();
-        for (Role role : person.getRoles()) {
-            rolesDTO.add(roleService.entityToDTO(role));
-        }
-        personDTO.setRoles(rolesDTO);
-        Set contactsDTO = new HashSet();
-        for (Contact contact : person.getContacts()) {
-            contactsDTO.add(contactService.entityToDTO(contact));
-        }
-        personDTO.setContacts(contactsDTO);
-        return personDTO;
     }
-
     private Person dtoToEntity(PersonDTO personDTO) {
-        Person person = new Person();
-
-        person.setId(personDTO.getId());
-        Name name = new Name();
-        name.setFirstName(personDTO.getFirstName());
-        name.setLastName(personDTO.getLastName());
-        name.setMiddleName(personDTO.getMiddleName());
-        name.setSuffix(personDTO.getSuffix());
-        name.setTitle(personDTO.getTitle());
-        person.setName(name);
-        Address address = new Address();
-        address.setStreet(personDTO.getStreet());
-        address.setBarangay(personDTO.getBarangay());
-        address.setCity(personDTO.getCity());
-        address.setZipCode(personDTO.getZipCode());
-        person.setAddress(address);
-        person.setDateHired(personDTO.getDateHired());
-        person.setBirthdate(personDTO.getBirthdate());
-        person.setGwa(personDTO.getGwa());
-        person.setCurrentlyEmployed(personDTO.getCurrentlyEmployed());
-        Set roles = new HashSet();
-        for (RoleDTO roleDTO : personDTO.getRoles()) {
-            roles.add(roleService.dtoToEntity(roleDTO));
-        }
-        person.setRoles(roles);
-        Set contacts = new HashSet();
-        for (ContactDTO contactDTO : personDTO.getContacts()) {
-            contacts.add(contactService.dtoToEntity(contactDTO));
-        }
-        person.setContacts(contacts);
-        return person;
-    }
+        return mapper.map(personDTO, Person.class);
+    }   
 }

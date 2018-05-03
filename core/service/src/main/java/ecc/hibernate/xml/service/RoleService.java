@@ -9,11 +9,19 @@ import ecc.hibernate.xml.dto.RoleDTO;
 import ecc.hibernate.xml.dao.RoleDao;
 import ecc.hibernate.xml.dao.GenericDao;
 
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
+
 public class RoleService{
     private RoleDao roleDao;
+    private MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+    private MapperFacade mapper;
 
     public RoleService() {
         roleDao = new RoleDao();
+        mapperFactory.classMap(Role.class, RoleDTO.class).byDefault();
+        mapper = mapperFactory.getMapperFacade();
     }
 
     public void saveOrUpdate(RoleDTO roleDTO ) {
@@ -47,9 +55,8 @@ public class RoleService{
         return roleDao.exists(Role.class, "roleName", role.getRoleName());
     }
 
-    public boolean roleNotUsed(RoleDTO roleDTO) {
-        Role role = dtoToEntity(roleDTO);
-        return (role.getPerson().size() == 0);
+    public boolean roleNotUsed(Long id) {
+        return roleDao.find(id).getPerson().size() == 0;
     }
 
     public String convertListToString(List<RoleDTO> roles) {
@@ -73,21 +80,12 @@ public class RoleService{
         return rolesString;
     }
 
-
-    public Role dtoToEntity(RoleDTO roleDTO) {
-        Role role = new Role();
-        role.setId(roleDTO.getId());
-        role.setRoleName(roleDTO.getRoleName());
-        role.setPerson(roleDTO.getPerson());
-        return role;
-    }
     public RoleDTO entityToDTO(Role role) {
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setId(role.getId());
-        roleDTO.setRoleName(role.getRoleName());
-        roleDTO.setPerson(role.getPerson());
-        return roleDTO;
-    }
+        return mapper.map(role, RoleDTO.class);
 
+    }
+    public Role dtoToEntity(RoleDTO roleDTO) {
+        return mapper.map(roleDTO, Role.class);
+    } 
 
 }
