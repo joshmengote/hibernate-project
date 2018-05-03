@@ -204,7 +204,7 @@ public class Application {
                 roleService.delete(role);
                 valid = true;
             } else {
-                System.out.println("\t Can't delete, role is being used!");
+                System.out.println("\t Can't delete, role is currently assigned!");
             }
         }
         roleManagementMenu();
