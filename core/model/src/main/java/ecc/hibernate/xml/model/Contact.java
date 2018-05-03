@@ -5,7 +5,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
-@Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "contact", uniqueConstraints = {
         @UniqueConstraint(columnNames = "information")})

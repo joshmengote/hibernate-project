@@ -9,7 +9,6 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 @Entity
-@Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "Roles",uniqueConstraints = {
         @UniqueConstraint(columnNames = "role")})
