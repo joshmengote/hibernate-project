@@ -85,6 +85,15 @@ public class PersonService{
         personDao.delete(dtoToEntity(personDTO));
     }
 
+    public void removeContact(PersonDTO personDTO, ContactDTO contactDTO) {
+        for (ContactDTO contact : personDTO.getContacts()) {
+            if( contact.getInformation().equals(contactDTO.getInformation())) {
+                personDTO.getContacts().remove(contact);
+            }
+        }
+        personDao.saveOrUpdate(dtoToEntity(personDTO));
+    }
+
     private String personObjectToString(PersonDTO personDTO) {
         Person person = dtoToEntity(personDTO);
         Name name = person.getName();
