@@ -3,7 +3,6 @@ package ecc.hibernate.xml.dao;
 import ecc.hibernate.xml.model.Person;
 import ecc.hibernate.xml.model.Contact;
 import ecc.hibernate.xml.model.Role;
-import ecc.hibernate.xml.util.HibernateUtils;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -18,30 +17,11 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 
 
-public class PersonDao {
+public class PersonDao extends GenericDao {
     private static final int ASCENDING = 1;
     private static final int DESCENDING = 2;
-    private static Session session;
-    private static Transaction transaction;
-    private static HibernateUtils hibernateUtil = new HibernateUtils();
-    private void startOperation() throws HibernateException {
-        session = hibernateUtil.getSessionFactory().openSession();
-        transaction = session.beginTransaction();
-    }
 
-    public void saveOrUpdate(Person person) {
-        try {
-            startOperation();
-            session.saveOrUpdate(person);
-            transaction.commit();
-        } catch (HibernateException e) {
-            transaction.rollback();
-        } finally {
-            session.close();
-        }
-    }
-
-    public Person find(long id) {
+    public Person find(Long id) {
         Person person = new Person();
         try {
             startOperation();
@@ -49,7 +29,7 @@ public class PersonDao {
             Hibernate.initialize(person.getContacts());
             Hibernate.initialize(person.getRoles());
         } catch (HibernateException e) {
-            transaction.rollback();
+            tx.rollback();
         } finally {
             session.close();
         }
@@ -68,24 +48,12 @@ public class PersonDao {
             Hibernate.initialize(person.getRoles());
             }
         } catch (HibernateException e) {
-            transaction.rollback();
+            tx.rollback();
         } finally {
             session.close();
         }
         return objects;
     }   
-
-    public void delete(Person person) {
-        try {
-            startOperation();
-            session.delete(person);
-            transaction.commit();
-        } catch (HibernateException e) {
-            transaction.rollback();
-        } finally {
-            session.close();
-        }
-    }
 
     public List<Person> findAllByLastName(int sortOrder) {
         List<Person> personList = new ArrayList();;
@@ -100,9 +68,9 @@ public class PersonDao {
                 Hibernate.initialize(person.getContacts());
                 Hibernate.initialize(person.getRoles());
             }
-            transaction.commit();
+            tx.commit();
         } catch (HibernateException e) {
-            transaction.rollback();
+            tx.rollback();
         } finally {
             session.close();
         }
@@ -122,7 +90,7 @@ public class PersonDao {
                 Hibernate.initialize(person.getRoles());
             }
         } catch (HibernateException e) {
-            transaction.rollback();
+            tx.rollback();
         } finally {
             session.close();
         }
