@@ -5,11 +5,11 @@ import java.util.Set;
 import java.util.HashSet;
 
 public class PersonDTO {
-	private Long id;
+    private Long id;
     private Float gwa;
     private Date birthdate;
     private Date dateHired;
-	private Boolean currentlyEmployed;
+    private Boolean currentlyEmployed;
 
     private String firstName;
     private String middleName;
@@ -25,42 +25,42 @@ public class PersonDTO {
     private Set<RoleDTO> roles = new HashSet();
     private Set<ContactDTO> contacts = new HashSet();
 
-	public PersonDTO() {}
-	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public PersonDTO() {}
+    
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Date getBirthdate() {
-		return birthdate;
-	}
-	public void setBirthdate(Date birthdate) {
-		this.birthdate = birthdate;
-	}
+    public Date getBirthdate() {
+        return birthdate;
+    }
+    public void setBirthdate(Date birthdate) {
+        this.birthdate = birthdate;
+    }
 
-	public Date getDateHired() {
-		return dateHired;
-	}
-	public void setDateHired(Date dateHired) {
-		this.dateHired = dateHired;
-	}
+    public Date getDateHired() {
+        return dateHired;
+    }
+    public void setDateHired(Date dateHired) {
+        this.dateHired = dateHired;
+    }
 
-	public Float getGwa() {
-		return gwa;
-	}
-	public void setGwa(Float gwa) {
-		this.gwa = gwa;
-	}
+    public Float getGwa() {
+        return gwa;
+    }
+    public void setGwa(Float gwa) {
+        this.gwa = gwa;
+    }
 
-	public Boolean getCurrentlyEmployed() {
-		return currentlyEmployed;
-	}
-	public void setCurrentlyEmployed(Boolean currentlyEmployed) {
-		this.currentlyEmployed = currentlyEmployed;
-	}
+    public Boolean getCurrentlyEmployed() {
+        return currentlyEmployed;
+    }
+    public void setCurrentlyEmployed(Boolean currentlyEmployed) {
+        this.currentlyEmployed = currentlyEmployed;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -126,18 +126,18 @@ public class PersonDTO {
         this.zipCode = zipCode;
     }
 
-	public Set<ContactDTO> getContacts() {
-		return contacts;
-	}
+    public Set<ContactDTO> getContacts() {
+        return contacts;
+    }
     public void setContacts(Set<ContactDTO> contacts) {
-    	this.contacts = contacts;
+        this.contacts = contacts;
     }
 
     public Set<RoleDTO> getRoles() {
         return roles;
     }
     public void setRoles(Set<RoleDTO> roles) {
-    	this.roles = roles;
+        this.roles = roles;
     }
 
     public String getFullName() {

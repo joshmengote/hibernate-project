@@ -25,32 +25,32 @@ public class Address {
         this.zipCode = zipCode;
     }
 
-	public String getStreet(){
-		return street;
-	}
-	
-	public void setStreet(String street) {
-		this.street = street;
-	}
+    public String getStreet(){
+        return street;
+    }
+    
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
-	public String getBarangay() {
-		return barangay;
-	}
-	public void setBarangay(String barangay) {
-		this.barangay = barangay;
-	}
+    public String getBarangay() {
+        return barangay;
+    }
+    public void setBarangay(String barangay) {
+        this.barangay = barangay;
+    }
 
-	public String getCity() {
-		return city;
-	}
-	public void setCity(String city) {
-		this.city = city;
-	}
+    public String getCity() {
+        return city;
+    }
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-	public Integer getZipCode() {
-		return zipCode;
-	}
-	public void setZipCode(Integer zipCode) {
-		this.zipCode = zipCode;
-	}
+    public Integer getZipCode() {
+        return zipCode;
+    }
+    public void setZipCode(Integer zipCode) {
+        this.zipCode = zipCode;
+    }
 }
