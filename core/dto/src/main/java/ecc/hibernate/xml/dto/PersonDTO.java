@@ -140,4 +140,17 @@ public class PersonDTO {
     	this.roles = roles;
     }
 
+    public String getFullName() {
+        String title = "";
+        String suffix = "";
+
+        title = (title != null && !title.isEmpty()) ? title + "." : "";
+        suffix = (suffix != null && !suffix.isEmpty()) ? "," + suffix : "";
+
+        return title + firstName + " " + middleName + " " + lastName + suffix;
+    }
+
+    public String getFullAddress() {
+        return street + " " + barangay + " " + city + " " + zipCode;
+    }
 }
