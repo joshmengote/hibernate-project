@@ -19,24 +19,16 @@ import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 public class PersonService {
     private static final int ASCENDING = 1;
-    private static final int DESCENDING = 1;
-    private PersonDao personDao;
-    private RoleDao roleDao;
-    private NameService nameService;
-    private AddressService addressService;
-    private RoleService roleService;
-    private ContactService contactService;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-    private MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-    private MapperFacade mapper;             
+    private static final int DESCENDING = 2;
+    private static PersonDao personDao = new PersonDao();
+    private static RoleDao roleDao = new RoleDao();
+    private static RoleService roleService = new RoleService();
+    private static ContactService contactService = new ContactService();
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+    private static MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+    private static MapperFacade mapper = mapperFactory.getMapperFacade();
 
     public PersonService() {
-        personDao = new PersonDao();
-        roleDao = new RoleDao();
-        nameService = new NameService();
-        addressService = new AddressService();
-        roleService = new RoleService();
-        contactService = new ContactService();
         mapperFactory.classMap(Person.class, PersonDTO.class).byDefault()
                         .field("name.firstName", "firstName")
                         .field("name.middleName", "middleName")
@@ -48,7 +40,6 @@ public class PersonService {
                         .field("address.city", "city")
                         .field("address.zipCode", "zipCode")
                         .register();
-        mapper = mapperFactory.getMapperFacade();
     }
 
     public void saveOrUpdate(PersonDTO personDTO) {
@@ -113,23 +104,17 @@ public class PersonService {
     }
 
     private String personObjectToString(PersonDTO personDTO) {
-        Person person = dtoToEntity(personDTO);
-        Name name = person.getName();
-        Address address = person.getAddress();
-        Set<RoleDTO> roles = personDTO.getRoles();
-        Set<ContactDTO> contacts = personDTO.getContacts();
-        String currentlyEmployed;
-        currentlyEmployed = (person.getCurrentlyEmployed() ? "YES" : "NO"); 
 
-        String idString = String.format("| %-3s|",person.getId());
-        String nameString = String.format(" %-50s|",nameService.nameToString(name));
-        String addressString = String.format(" %-50s|",addressService.addressToString(address));
-        String bdayString = String.format(" %-10s |", dateFormat.format(person.getBirthdate()));
-        String dateHiredString = String.format(" %-10s |", dateFormat.format(person.getDateHired()));
-        String gwaString = String.format(" %-4s |", person.getGwa());
+        String idString = String.format("| %-3s|", personDTO.getId());
+        String nameString = String.format(" %-50s|", personDTO.getFullName());
+        String addressString = String.format(" %-50s|", personDTO.getFullAddress());
+        String bdayString = String.format(" %-10s |", dateFormat.format(personDTO.getBirthdate()));
+        String dateHiredString = String.format(" %-10s |", dateFormat.format(personDTO.getDateHired()));
+        String gwaString = String.format(" %-4s |", personDTO.getGwa());
+        String currentlyEmployed = (personDTO.getCurrentlyEmployed() ? "YES" : "NO"); 
         String currentlyEmployedString = String.format("%8s%-12s|", "", currentlyEmployed);
-        String roleString = String.format(" %-30s|", roleService.convertSetToString(roles));
-        String contactString = String.format(" %-49s|", contactService.convertSetToString(contacts));
+        String roleString = String.format(" %-30s|", roleService.convertSetToString(personDTO.getRoles()));
+        String contactString = String.format(" %-49s|", contactService.convertSetToString(personDTO.getContacts()));
 
         String personString = idString + nameString + addressString + bdayString + gwaString + dateHiredString + currentlyEmployedString + roleString + contactString;
         return personString;
@@ -144,20 +129,19 @@ public class PersonService {
     }
 
     public String getPersonInfoAsString(PersonDTO personDTO) {
-        Person person = dtoToEntity(personDTO);
-        String currentlyEmployed = ((person.getCurrentlyEmployed()) ? "YES" : "NO");
-        String personInfo = "   Person ID #: " + person.getId() 
-            + "\n   Name: " + nameService.nameToString(person.getName()) 
-            + "\n   Address: " + addressService.addressToString(person.getAddress())  
-            + "\n   Birthdate: " + dateFormat.format(person.getBirthdate()) 
-            + "\n   GWA: " + person.getGwa() 
-            + "\n   Date Hired: " + dateFormat.format(person.getDateHired())  
+        String currentlyEmployed = ((personDTO.getCurrentlyEmployed()) ? "YES" : "NO");
+        String personInfo = "   Person ID #: " + personDTO.getId() 
+            + "\n   Name: " + personDTO.getFullName() 
+            + "\n   Address: " + personDTO.getFullAddress()  
+            + "\n   Birthdate: " + dateFormat.format(personDTO.getBirthdate()) 
+            + "\n   GWA: " + personDTO.getGwa() 
+            + "\n   Date Hired: " + dateFormat.format(personDTO.getDateHired())  
             + "\n   Employment Status:  Currently Employed = " + currentlyEmployed;
         return personInfo;
     }
 
-    public List getAvailableRolesFor(PersonDTO personDTO) {
-        Person person = dtoToEntity(personDTO);
+    public List getAvailableRolesFor(Long id) {
+        Person person = personDao.find(id);
         List<Role> roles = roleDao.findAll(Role.class);
         List<Role> personRolesList = new ArrayList(person.getRoles());
         List<Role> intersection = new ArrayList();
@@ -176,16 +160,15 @@ public class PersonService {
         return rolesDTO;
     }
 
-    public boolean hasAvailableRolesFor(PersonDTO personDTO) {
-        return (getAvailableRolesFor(personDTO).size() == 0) ? false : true;
+    public boolean hasAvailableRolesFor(Long id) {
+        return (getAvailableRolesFor(id).size() == 0) ? false : true;
     }
 
-    public boolean roleIsAvailable(PersonDTO personDTO, RoleDTO roleDTO) {
-        Role role = roleService.dtoToEntity(roleDTO);
-        List<RoleDTO> availableRoles = getAvailableRolesFor(personDTO);
+    public boolean roleIsAvailable(Long id, String roleDtoName) {
+        List<RoleDTO> availableRoles = getAvailableRolesFor(id);
         boolean isAvailable = true;
         for (RoleDTO personRole : availableRoles) {
-            if (personRole.getRoleName().equals(role.getRoleName())){
+            if (personRole.getRoleName().equals(roleDtoName)) {
                 isAvailable = false;
             }
         }
