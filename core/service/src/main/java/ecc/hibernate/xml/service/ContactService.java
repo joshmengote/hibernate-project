@@ -12,14 +12,12 @@ import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 
 public class ContactService {
-    private GenericDao contactDao;
-    private MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-    private MapperFacade mapper;
+    private static GenericDao contactDao = new GenericDao();
+    private static MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+    private static MapperFacade mapper = mapperFactory.getMapperFacade();
 
     public ContactService() {
-        contactDao = new GenericDao();
         mapperFactory.classMap(Contact.class, ContactDTO.class).byDefault();
-        mapper = mapperFactory.getMapperFacade();
     }
 
     public void saveOrUpdate(ContactDTO contactDTO) {

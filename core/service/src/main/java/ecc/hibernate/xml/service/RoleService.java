@@ -14,14 +14,12 @@ import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 
 public class RoleService{
-    private RoleDao roleDao;
-    private MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-    private MapperFacade mapper;
+    private static RoleDao roleDao = new RoleDao();
+    private static MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+    private static MapperFacade mapper = mapperFactory.getMapperFacade();
 
     public RoleService() {
-        roleDao = new RoleDao();
         mapperFactory.classMap(Role.class, RoleDTO.class).byDefault();
-        mapper = mapperFactory.getMapperFacade();
     }
 
     public void saveOrUpdate(RoleDTO roleDTO ) {
