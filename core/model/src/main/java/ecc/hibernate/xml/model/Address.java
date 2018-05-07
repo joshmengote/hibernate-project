@@ -1,6 +1,7 @@
 package ecc.hibernate.xml.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
 @Embeddable
 public class Address {
