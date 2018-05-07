@@ -40,13 +40,13 @@ public class Person {
     @ManyToMany
     @Cascade({CascadeType.SAVE_UPDATE})  
     @JoinTable(name="person_role", joinColumns=@JoinColumn(name="person_id"), inverseJoinColumns=@JoinColumn(name="role_id"))
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Role> roles = new HashSet<Role>();
 
     @OneToMany
     @Cascade({CascadeType.ALL})
     @JoinColumn(name = "person_id") 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Contact> contacts = new HashSet<Contact>();
 
 	public Person() {}
