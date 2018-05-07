@@ -230,7 +230,7 @@ public class Application {
         System.out.println("  ROLES");
         boolean isFinishedAdding = false;
         while(!isFinishedAdding) {
-            if(!personService.hasAvailableRolesFor(person)) {
+            if(!personService.hasAvailableRolesFor(person.getId())) {
                 System.out.println("    No more available roles to add\n");
                 break;
             }
@@ -342,7 +342,7 @@ public class Application {
             return;
         }
         PersonDTO person = selectPersonFromList();
-        if(!personService.hasAvailableRolesFor(person)) {
+        if(!personService.hasAvailableRolesFor(person.getId())) {
             System.out.println("    No more available roles to add");
             return;
         }
@@ -440,7 +440,7 @@ public class Application {
     }
 
     private static void printAvailableRolesFor(PersonDTO person) {
-        List availableRoles = personService.getAvailableRolesFor(person);
+        List availableRoles = personService.getAvailableRolesFor(person.getId());
         String rolesString = roleService.convertListToString(availableRoles);
         System.out.println();
         System.out.println("  AVAILABLE ROLES");
@@ -478,7 +478,7 @@ public class Application {
         while(!valid) {
             try {
                 role = roleService.find((long) userInput.number(header + "(Enter ID): "));
-                if (personService.roleIsAvailable(person,role)) {
+                if (personService.roleIsAvailable(person.getId(),role.getRoleName())) {
                     System.out.println("    Role not available to add. Please try again.");
                 } else {
                     valid = true;
